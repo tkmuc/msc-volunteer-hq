@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f7fb">
+  <meta name="description" content="MSC Volunteer HQ – eine unabhängige Konzeptdemo mit fiktiven Beispieldaten.">
+  <title>MSC Volunteer HQ · Konzeptdemo</title>
+  <style>
+    :root {
+      --bg:#f4f7fb; --card:#fff; --soft:#ebf0f6; --navy:#071f42;
+      --muted:#526176; --line:#d6dfea; --accent:#12518b; --warning:#a65c00;
+      --radius:10px; --app-width:480px; --shadow:0 3px 10px #071f4206;
+    }
+    * { box-sizing:border-box; }
+    html { background:#e9eef4; color:var(--navy); }
+    body { margin:0; font:14px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+    button,input,select,textarea { font:inherit; color:inherit; }
+    button,a,input,select,textarea,summary { -webkit-tap-highlight-color:transparent; }
+    button { cursor:pointer; }
+    button,a { touch-action:manipulation; }
+    button { overflow-wrap:anywhere; }
+    a { color:var(--accent); }
+    button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible { outline:3px solid #83afe0; outline-offset:3px; }
+    button:disabled { opacity:.55; cursor:default; }
+    p { margin:0; }
+    h1,h2,h3 { margin:0; line-height:1.15; letter-spacing:-.04em; font-weight:850; }
+    h1 { font-size:clamp(27px,7.4vw,33px); }
+    h2 { font-size:22px; }
+    h3 { font-size:17px; }
+    svg { display:block; }
+    .icon { width:20px; height:20px; flex-shrink:0; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+    .app { width:100%; max-width:var(--app-width); min-height:100vh; min-height:100dvh; margin:auto; background:var(--bg); position:relative; box-shadow:0 0 50px #071f4209; }
+    .app-header { position:sticky; top:0; z-index:15; background:#f4f7fbf5; border-bottom:1px solid var(--line); backdrop-filter:blur(12px); padding:17px 18px 9px; }
+    .brand { display:flex; align-items:center; gap:12px; min-width:0; }
+    .brand-lockup { display:flex; gap:7px; align-items:center; }
+    .brand-mark { font-size:30px; line-height:1; font-weight:950; letter-spacing:-2px; }
+    .brand-name { font-size:6.5px; font-weight:850; letter-spacing:.6px; line-height:1.2; text-transform:uppercase; }
+    .brand-divider { width:1px; height:26px; background:#8c9fb8; }
+    .brand-title { font-size:11px; letter-spacing:.12em; font-weight:750; }
+    .draft-tag { margin-left:auto; border:1px solid #a4b6cd; border-radius:3px; padding:3px 5px; font-size:9px; letter-spacing:.07em; }
+    .header-meta { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:9px; color:var(--muted); font-size:10px; }
+    .demo-switch { display:inline-flex; gap:5px; align-items:center; border:0; background:none; padding:3px 0 3px 8px; font-size:10px; min-height:28px; color:var(--muted); }
+    .demo-switch .icon { width:13px; height:13px; }
+    main { padding:20px 18px calc(100px + env(safe-area-inset-bottom)); }
+    .page { animation:appear .18s ease; }
+    .page-head { position:relative; margin-bottom:18px; }
+    .page-head .eyebrow { margin-bottom:7px; }
+    .page-head p { color:var(--muted); margin-top:5px; font-size:14px; }
+    .eyebrow,.field-label { font-size:10px; line-height:1.4; letter-spacing:.11em; text-transform:uppercase; font-weight:650; color:#496381; }
+    .eyebrow { display:block; margin-bottom:7px; }
+    .section-label { margin:18px 2px 8px; }
+    .section-title { font-size:20px; margin:20px 2px 10px; }
+    .muted { color:var(--muted); }
+    .small { font-size:12px; }
+    .tiny { font-size:10px; }
+    .stack { display:grid; gap:10px; }
+    .card { border:1px solid var(--line); background:var(--card); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); min-width:0; }
+    .soft { background:var(--soft); box-shadow:none; }
+    .row { display:flex; align-items:center; gap:10px; min-width:0; }
+    .between { justify-content:space-between; }
+    .grow { flex:1; min-width:0; }
+    .button { border:1px solid var(--navy); border-radius:7px; min-height:44px; padding:10px 12px; background:white; display:inline-flex; align-items:center; justify-content:center; gap:8px; font-size:13px; font-weight:650; text-decoration:none; line-height:1.35; }
+    .button.primary { background:var(--navy); color:white; }
+    .button.subtle { border-color:var(--line); background:transparent; }
+    .button.danger { border-color:#e4caca; color:#9c3434; }
+    .button.full { width:100%; }
+    .button.compact { padding:8px 10px; font-size:12px; }
+    .button .icon { width:18px; height:18px; }
+    .button-pair { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:9px; }
+    .text-button { display:inline-flex; align-items:center; gap:6px; padding:8px 0; border:0; background:transparent; font-size:12px; font-weight:650; color:var(--accent); text-align:left; min-height:40px; }
+    .text-button .icon { width:16px; height:16px; }
+    .back { display:inline-flex; align-items:center; gap:4px; border:0; padding:0; min-height:30px; background:transparent; font-size:12px; margin:-8px 0 8px; }
+    .back .icon { width:15px; height:15px; }
+    .pill { display:inline-flex; align-items:center; gap:5px; border:1px solid #aabdd3; border-radius:50px; padding:4px 10px; font-size:11px; background:#ffffff80; }
+    .badge { display:inline-block; border:1px solid #aabdd3; border-radius:4px; padding:3px 7px; font-size:11px; font-weight:550; }
+    .entry { width:100%; display:flex; align-items:center; gap:12px; border:1px solid var(--line); border-radius:var(--radius); padding:12px 13px; background:white; text-align:left; min-width:0; box-shadow:var(--shadow); }
+    .entry strong { display:block; font-size:13px; line-height:1.35; font-weight:750; }
+    .entry .subtitle { display:block; color:var(--muted); font-size:11px; margin-top:3px; }
+    .entry>.icon:last-child { width:16px; height:16px; }
+    .entry-icon { width:31px; min-width:31px; height:34px; display:grid; place-items:center; }
+    .entry-icon.tinted { background:#eef4fa; border-radius:6px; }
+    .nav { position:fixed; z-index:20; width:100%; max-width:var(--app-width); left:50%; transform:translateX(-50%); bottom:0; background:#ffffffed; backdrop-filter:blur(16px); border-top:1px solid var(--line); display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:3px; padding:5px 7px calc(6px + env(safe-area-inset-bottom)); }
+    .nav button { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; border:0; background:transparent; min-height:58px; padding:5px 1px; border-radius:9px; font-size:10px; }
+    .nav .icon { width:23px; height:23px; }
+    .nav button.active { background:#e4eef8; font-weight:750; }
+    .nav button.active .icon { stroke-width:2.2; }
+    .page-footer { text-align:center; margin:13px 0 0; font-size:9px; color:#687e98; }
+    .welcome { position:relative; isolation:isolate; padding:5px 0 15px; margin-bottom:3px; }
+    .welcome h1 { font-size:clamp(26px,7vw,31px); }
+    .welcome p { margin:4px 0 10px; font-size:13px; }
+    .welcome .architecture { position:absolute; z-index:-1; width:160px; height:245px; right:-4px; top:-53px; opacity:.29; pointer-events:none; filter:grayscale(1) contrast(2.8) brightness(1.5); mix-blend-mode:multiply; mask-image:linear-gradient(to bottom,transparent 0%,black 12%,black 76%,transparent 100%); }
+    .shift { padding:15px; }
+    .shift-time { font-size:clamp(31px,9vw,41px); line-height:1.05; letter-spacing:-.055em; font-weight:900; margin:6px 0 3px; }
+    .shift h2 { font-size:26px; }
+    .shift-location { font-size:12px; color:var(--muted); margin:8px 0 13px; }
+    .shift-location .icon { color:var(--accent); width:17px; height:17px; }
+    .shift-actions { padding-top:12px; border-top:1px solid var(--line); }
+    .update-dot { width:12px; height:12px; border-radius:50%; background:#48a3df; flex:none; margin:0 8px 0 2px; }
+    .portrait { flex:none; overflow:hidden; width:58px; height:58px; border-radius:50%; background:#e2ebf1; }
+    .portrait svg { width:100%; height:100%; object-fit:cover; }
+    .person-home { gap:11px; }
+    .person-home h3 { font-size:17px; }
+    .person-home .button { margin-left:auto; }
+    .person-home .muted { font-size:11px; }
+    .field { display:grid; gap:6px; min-width:0; }
+    input:not([type="radio"]),select,textarea { width:100%; min-width:0; min-height:44px; border:1px solid #b8cce1; border-radius:8px; background:white; padding:11px 12px; font-size:16px; line-height:1.45; }
+    textarea { resize:vertical; min-height:108px; }
+    input::placeholder,textarea::placeholder { color:#73859e; opacity:1; }
+    .search { position:relative; margin:12px 0; }
+    .search .icon { position:absolute; left:13px; top:13px; }
+    .search input { padding-left:41px; }
+    .segments { display:flex; border:1px solid #b8cce1; border-radius:8px; background:white; overflow:hidden; }
+    .segments button { flex:1; min-width:0; min-height:42px; border:0; border-right:1px solid var(--line); background:transparent; display:flex; align-items:center; justify-content:center; gap:7px; padding:9px 5px; font-size:12px; line-height:1.25; }
+    .segments button:last-child { border-right:0; }
+    .segments button.active { background:var(--navy); color:white; }
+    .segments .icon { width:18px; height:18px; }
+    .floor-tabs { display:flex; justify-content:center; gap:10px; margin:12px 0 4px; }
+    .floor-tabs button { width:75px; min-height:38px; background:white; border:1px solid #b8cce1; border-radius:7px; font-size:12px; }
+    .floor-tabs button.active { background:var(--navy); color:white; border-color:var(--navy); }
+    .venue-map { position:relative; min-width:0; margin:8px -8px 0; }
+    .iso-map { height:340px; position:relative; }
+    .iso-level { position:absolute; top:calc(var(--order) * 96px + 5px); left:28px; right:0; height:135px; opacity:.38; transition:opacity .18s; }
+    .iso-level.active { opacity:1; z-index:3; }
+    .iso-level svg { width:100%; height:135px; }
+    .floor-label { position:absolute; top:calc(var(--order) * 96px + 69px); left:0; padding:1px 0 3px; font-size:11px; font-weight:600; border:0; border-bottom:1px solid #a2b8cf; background:none; min-width:29px; }
+    .floor-label.active { color:var(--accent); font-weight:850; }
+    .map-pin { position:absolute; left:var(--x); top:var(--y); transform:translate(-50%,-50%); display:inline-flex; align-items:center; gap:3px; color:var(--navy); background:white; border:1px solid #b8cadc; border-radius:6px; padding:5px 7px; font-size:10px; font-weight:650; box-shadow:0 4px 9px #071f4218; white-space:nowrap; min-height:36px; }
+    .map-pin .icon { width:17px; height:20px; fill:var(--navy); stroke:white; }
+    .map-pin.selected { color:white; background:var(--navy); border-color:var(--navy); }
+    .plan-map { height:260px; position:relative; margin:13px 0 4px; }
+    .plan-map>svg { width:100%; height:250px; }
+    .map-caption { text-align:right; color:#687e98; font-size:9px; margin:0 1px 12px; }
+    .poi-detail h2 { font-size:24px; margin:1px 0 5px; }
+    .poi-detail p { font-size:13px; color:var(--muted); }
+    .poi-detail .row { margin:9px 0 12px; font-size:12px; }
+    .search-results { display:grid; gap:7px; margin:-4px 0 12px; }
+    .empty { border:1px dashed #b8cce1; border-radius:8px; padding:18px 14px; text-align:center; color:var(--muted); font-size:12px; }
+    .contact-feature { display:flex; gap:13px; padding:12px; }
+    .contact-feature .portrait { width:110px; height:165px; border-radius:6px; }
+    .contact-feature h3 { font-size:19px; }
+    .contact-feature .person-role { font-size:12px; color:var(--muted); margin:3px 0 7px; }
+    .contact-feature .person-purpose { font-size:12px; line-height:1.5; }
+    .contact-feature .location-label { display:block; font-size:9px; color:#496381; margin:7px 0; }
+    .contact-feature .button-pair { gap:6px; }
+    .contact-feature .button { font-size:10px; padding:6px; gap:4px; min-height:38px; }
+    .contact-feature .button .icon { width:14px; height:14px; }
+    .contact-entry { padding:0; overflow:hidden; }
+    .contact-entry .portrait { width:76px; height:80px; border-radius:0; }
+    .contact-entry .grow { padding:9px 0; }
+    .contact-entry>.icon { margin-right:12px; }
+    .info { display:flex; gap:10px; align-items:center; border:1px solid var(--line); border-radius:8px; padding:10px; margin-top:12px; font-size:11px; }
+    .chips { display:flex; flex-wrap:wrap; gap:5px; margin:9px 0 0; }
+    .chip { min-height:37px; padding:7px 9px; border:1px solid #bccfe2; border-radius:25px; background:white; display:flex; align-items:center; gap:5px; font-size:10px; }
+    .chip .icon { width:15px; height:15px; }
+    .chip.active { background:var(--navy); border-color:var(--navy); color:white; }
+    details.faq-item { padding:0; }
+    .faq-item summary { list-style:none; display:flex; justify-content:space-between; align-items:center; gap:10px; padding:13px; font-weight:750; font-size:13px; cursor:pointer; min-height:48px; }
+    .faq-item summary::-webkit-details-marker { display:none; }
+    .faq-item summary .icon { width:15px; height:15px; }
+    .faq-item[open] summary .icon { transform:rotate(180deg); }
+    .faq-body { padding:0 13px 11px; font-size:12px; color:var(--muted); }
+    .faq-actions { display:flex; flex-wrap:wrap; gap:16px; margin:5px 0 3px; }
+    .faq-meta { padding-top:8px; border-top:1px solid var(--line); display:flex; flex-wrap:wrap; justify-content:space-between; gap:3px; font-size:9px; color:#647b98; }
+    .support-card { margin-top:13px; }
+    .support-card .row { align-items:flex-start; margin-bottom:9px; }
+    .support-card .icon { width:30px; height:30px; }
+    .support-card strong { padding-top:2px; font-size:13px; }
+    .steps { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); margin:16px -5px 18px; }
+    .step { position:relative; text-align:center; background:none; border:0; padding:0; font-size:11px; color:var(--muted); }
+    .step:before { content:""; position:absolute; top:14px; left:50%; width:100%; height:1px; background:#bccfe2; }
+    .step:last-child:before { display:none; }
+    .step-number { position:relative; z-index:1; display:grid; place-items:center; width:28px; height:28px; margin:0 auto 4px; border-radius:50%; border:1px solid #b9cce0; background:var(--bg); font-size:13px; }
+    .step.active { font-weight:750; color:var(--navy); }
+    .step.active .step-number { border:2px solid var(--navy); box-shadow:inset 0 0 0 3px var(--bg); background:var(--navy); color:transparent; }
+    .step.done .step-number { background:var(--navy); border-color:var(--navy); color:white; }
+    .expense-summary .eyebrow { margin:0; }
+    .expense-total { font-size:32px; font-weight:850; line-height:1.25; letter-spacing:-.04em; margin:3px 0; }
+    .expense-status { display:flex; align-items:center; gap:5px; font-size:10px; margin-top:4px; color:var(--accent); }
+    .expense-status .icon { width:14px; height:14px; }
+    .expense-status.missing { color:var(--warning); }
+    .expense-amount { font-weight:750; font-size:14px; white-space:nowrap; }
+    .upload { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; border:1px dashed #637f9f; border-radius:8px; min-height:78px; background:transparent; padding:12px; width:100%; font-size:12px; cursor:pointer; text-align:center; }
+    .upload .icon { width:25px; height:25px; }
+    .upload .file-input { position:absolute; width:1px; height:1px; min-height:0; padding:0; border:0; opacity:0; overflow:hidden; }
+    .upload:focus-within { outline:3px solid #83afe0; outline-offset:3px; }
+    .save-status { display:flex; justify-content:center; align-items:center; gap:6px; color:#687e98; font-size:10px; margin-top:10px; }
+    .save-status .icon { width:14px; height:14px; }
+    .receipt-card { display:grid; gap:9px; }
+    .receipt-card .button-pair { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+    .receipt-preview { max-width:100%; max-height:290px; object-fit:contain; margin:10px auto; border-radius:7px; }
+    .review-row { display:flex; justify-content:space-between; gap:12px; padding:9px 0; font-size:12px; border-bottom:1px solid var(--line); }
+    .review-row strong { white-space:nowrap; }
+    .review-total { border-bottom:0; padding-top:14px; font-size:16px; font-weight:750; }
+    .feedback-head { isolation:isolate; }
+    .feedback-head .elephant { position:absolute; right:-9px; top:-53px; width:165px; height:218px; object-fit:contain; opacity:.19; z-index:-1; pointer-events:none; }
+    .form-stack { display:grid; gap:17px; margin-top:19px; }
+    .counter { font-size:10px; color:#496381; text-align:right; margin-top:1px; }
+    .radio-option { border:1px solid #bdcfe2; border-radius:8px; background:white; display:flex; align-items:center; gap:12px; padding:10px 12px; min-height:60px; }
+    .radio-option:has(input:checked) { border-color:var(--navy); box-shadow:inset 0 0 0 1px var(--navy); }
+    .radio-option input { accent-color:var(--navy); width:18px; height:18px; margin:0; flex:none; }
+    .radio-option strong { display:block; font-weight:600; font-size:12px; }
+    .radio-option small { color:var(--muted); font-size:10px; }
+    .help-line { display:flex; align-items:center; gap:8px; padding:8px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin:16px 0 12px; font-size:11px; }
+    .help-line .text-button { margin-left:auto; font-size:10px; }
+    .rating { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:6px; }
+    .rating button { border:1px solid #bdcfe2; border-radius:8px; padding:10px 2px; background:white; font-size:10px; display:grid; justify-items:center; gap:5px; min-height:70px; }
+    .rating button.active { border-color:var(--navy); background:#e5eef8; box-shadow:inset 0 0 0 1px var(--navy); }
+    .rating .icon { width:27px; height:27px; }
+    .error { border-left:3px solid #a7423a; padding:9px 11px; background:#fbefed; color:#8d342d; font-size:12px; border-radius:4px; margin-bottom:13px; }
+    .notice { padding:11px 12px; background:#f7f1e6; border:1px solid #e6d8bc; border-radius:8px; font-size:12px; color:#835500; }
+    .success { padding:22px 15px; text-align:center; }
+    .success>.icon { width:36px; height:36px; margin:0 auto 12px; color:var(--accent); }
+    .success p { margin:9px 0 15px; color:var(--muted); font-size:12px; }
+    .success .tiny { margin-top:12px; }
+    .admin-item { padding:14px; }
+    .admin-item .row { align-items:flex-start; }
+    .admin-item p { margin:8px 0; color:var(--muted); font-size:12px; }
+    .modal-layer { position:fixed; inset:0; z-index:40; display:flex; align-items:flex-end; justify-content:center; background:#071f4270; padding-top:30px; }
+    .modal { width:100%; max-width:var(--app-width); background:var(--bg); padding:20px 18px calc(22px + env(safe-area-inset-bottom)); border-radius:18px 18px 0 0; max-height:92vh; max-height:92dvh; overflow-y:auto; box-shadow:0 -8px 40px #071f4218; }
+    .modal-head { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:18px; }
+    .modal-head h2 { font-size:22px; }
+    .icon-button { display:grid; place-items:center; width:36px; height:36px; border:1px solid var(--line); border-radius:50%; background:white; flex:none; }
+    .modal .form-stack { margin-top:0; }
+    .profile-portrait { width:86px; height:105px; border-radius:9px; }
+    .profile-copy { margin:14px 0; font-size:13px; }
+    .contact-data { overflow-wrap:anywhere; }
+    .toast { position:fixed; z-index:60; left:50%; transform:translateX(-50%); bottom:calc(84px + env(safe-area-inset-bottom)); width:calc(100% - 36px); max-width:420px; color:white; background:var(--navy); border-radius:9px; padding:12px 14px; box-shadow:0 7px 24px #071f4230; font-size:12px; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+    .mini-portrait { width:36px; height:36px; border-radius:50%; }
+    .spatial-map { position:relative; width:100%; }
+    .ground-detail { aspect-ratio:3 / 2; margin:8px 0 15px; }
+    .overview-detail { aspect-ratio:2 / 3; }
+    .venue-art { display:block; width:100%; height:100%; object-fit:contain; }
+    .plan-detail { aspect-ratio:600 / 380; }
+    .plan-detail>svg { width:100%; height:100%; }
+    .map-pin.compact-pin { background:transparent; border:0; box-shadow:none; padding:6px; min-width:44px; min-height:44px; justify-content:center; overflow:visible; white-space:normal; }
+    .pin-dot { display:grid; place-items:center; width:27px; height:27px; background:#071f42df; border:2px solid white; color:white; font-size:11px; font-weight:750; border-radius:50%; box-shadow:0 2px 6px #071f4230; }
+    .selected .pin-dot { background:var(--navy); outline:2px solid #7398bd; outline-offset:1px; }
+    .pin-label { position:absolute; top:calc(100% - 4px); left:50%; transform:translateX(var(--label-shift,-50%)); background:white; border:1px solid var(--line); padding:4px 7px; border-radius:5px; font-size:10px; color:var(--navy); white-space:nowrap; box-shadow:0 2px 5px #071f4212; }
+    .floor-tabs button small { display:block; font-size:8px; opacity:.75; }
+    .poi-picker { margin:10px 0 15px; }
+    .room-label { display:flex; align-items:center; flex-wrap:wrap; gap:5px; margin:9px 0 12px; padding-bottom:11px; border-bottom:1px solid var(--line); font-size:12px; color:var(--muted); }
+    .room-label strong { color:var(--navy); }
+    .room-label .icon { width:16px; height:16px; }
+    .location-description { padding:13px 0 0; }
+    .location-description p { margin-top:5px; line-height:1.65; }
+    .poi-services { margin-top:14px; }
+    .poi-services ul { margin:6px 0 0; padding-left:17px; color:var(--muted); font-size:12px; line-height:1.7; }
+    .poi-facts { margin:14px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:9px 0; }
+    .poi-facts div { display:flex; gap:12px; align-items:baseline; margin:4px 0; }
+    .poi-facts dt { flex:0 0 67px; font-size:11px; color:var(--muted); }
+    .poi-facts dd { margin:0; font-size:12px; }
+    .poi-person strong { font-size:13px; }
+    .poi-detail .room-demo-note { margin-top:9px; color:#6f8298; font-size:9px; line-height:1.4; }
+    [hidden] { display:none!important; }
+    @keyframes appear { from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none} }
+    @media(min-width:600px) { .app { border-left:1px solid var(--line); border-right:1px solid var(--line); } main { padding-left:23px; padding-right:23px; } .app-header { padding-left:23px; padding-right:23px; } .modal-layer { align-items:center; padding:25px; } .modal { border-radius:16px; max-height:88vh; } }
+    @media(max-width:359px) { main { padding-left:13px; padding-right:13px; } .app-header { padding-left:13px; padding-right:13px; } .brand { gap:8px; } .brand-title { font-size:9px; } .brand-name { font-size:5.5px; } .brand-mark { font-size:28px; } .person-home { gap:8px; flex-wrap:wrap; } .person-home .portrait { width:48px; height:48px; } .person-home .grow { min-width:135px; } .contact-feature { gap:10px; } .contact-feature .portrait { width:78px; height:153px; } .contact-feature .button-pair { grid-template-columns:1fr; gap:5px; } .contact-feature .button { min-height:34px; } .iso-level { left:22px; } .map-pin { font-size:9px; padding:4px 5px; } .segments button { font-size:11px; gap:4px; } .button-pair .button { font-size:12px; padding:9px 7px; } .expense-amount { font-size:13px; } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
+  </style>
+</head>
+<body>
+<div id="app" class="app"></div>
+<div id="announcements" class="sr-only" role="status" aria-live="polite"></div>
+<script>
+(() => {
+  'use strict';
+  // 1. Fiktive Beispieldaten. IDs verbinden Orte, Personen und Inhalte.
+  const KEY = 'msc-volunteer-hq-demo-v2';
+  const LEGACY_KEY = 'msc-volunteer-hq-demo-v1';
+  const buildings = {
+    hof: { name:'Bayerischer Hof', floors:['EG','1. OG','2. OG'], pois:[
+      {id:'desk',name:'Volunteer Desk',floor:'EG',category:'Volunteer Desk',purpose:'Fragen zu deinem Einsatz? Hier bekommst du Hilfe und eine erste Orientierung.',hours:'08:00–18:00',contact:'anna',x:62,y:77,px:52,py:60},
+      {id:'org',name:'Organisation',floor:'EG',category:'Organisatorische Hilfe',purpose:'Anlaufstelle für organisatorische Fragen, Unterlagen und offene Absprachen.',hours:'09:00–17:00',contact:'julia',x:29,y:34,px:24,py:34},
+      {id:'meet',name:'Treffpunkt A',floor:'1. OG',category:'Treffpunkt',purpose:'Hier triffst du im Beispiel dein Team zur Übergabe vor dem Einsatz.',hours:'08:00–13:00',contact:'max',x:35,y:68,px:32,py:42},
+      {id:'team',name:'Teamkoordination',floor:'1. OG',category:'Organisatorische Hilfe',purpose:'Für Rückfragen zur Aufgabenverteilung und zu deinem nächsten Einsatz.',hours:'08:00–16:00',contact:'max',x:72,y:28,px:71,py:66},
+      {id:'pause',name:'Pause & Verpflegung',floor:'2. OG',category:'Pause / Verpflegung',purpose:'Ein ruhiger Platz für eine Pause. Verfügbare Angebote kannst du vor Ort erfragen.',hours:'09:00–18:00',contact:'anna',x:40,y:30,px:34,py:37},
+      {id:'lounge',name:'Volunteer Lounge',floor:'2. OG',category:'Pause / Verpflegung',purpose:'Platz zum Durchatmen und zum Austausch mit anderen Volunteers.',hours:'09:00–18:00',contact:'anna',x:68,y:77,px:70,py:65}
+    ]},
+    demo: { name:'Venue B · Demo', floors:['EG','1. OG','2. OG'], pois:[
+      {id:'helpb',name:'Org Help Point',floor:'EG',category:'Organisatorische Hilfe',purpose:'Fragen zu Abläufen oder Unterlagen? Die Organisation unterstützt dich hier.',hours:'09:00–17:00',contact:'julia',x:31,y:32,px:25,py:37},
+      {id:'deskb',name:'Support Desk',floor:'EG',category:'Volunteer Desk',purpose:'Deine erste Anlaufstelle in diesem Demogebäude.',hours:'08:00–18:00',contact:'anna',x:70,y:78,px:71,py:63},
+      {id:'meetb',name:'Treffpunkt B',floor:'1. OG',category:'Treffpunkt',purpose:'Hier findet im Beispiel die Übergabe für das zweite Gebäude statt.',hours:'08:30–13:00',contact:'max',x:56,y:79,px:52,py:60},
+      {id:'material',name:'Materialausgabe',floor:'1. OG',category:'Organisatorische Hilfe',purpose:'Rückfragen zu Arbeitsmaterial und vorbereiteten Unterlagen.',hours:'09:00–16:00',contact:'julia',x:37,y:30,px:28,py:30},
+      {id:'pauseb',name:'Coffee Corner',floor:'2. OG',category:'Pause / Verpflegung',purpose:'Zeit für eine kurze Pause und ein Gespräch mit deinem Team.',hours:'09:00–18:00',contact:'anna',x:34,y:71,px:27,py:48},
+      {id:'quietb',name:'Ruhiger Bereich',floor:'2. OG',category:'Pause / Verpflegung',purpose:'Ein zurückgezogener Bereich zum Erholen zwischen Einsätzen.',hours:'09:00–18:00',contact:'anna',x:72,y:26,px:73,py:36}
+    ]}
+  };
+  // Reale Raumnamen nach öffentlich zugänglichen Hotelplänen; D- kennzeichnet frei erfundene Demo-Raumkennungen.
+  const poiDetails={
+  "desk": {
+    "room": "D-E01",
+    "zone": "Lobby · temporärer Demo-Desk",
+    "purpose": "Deine erste Anlaufstelle für den Volunteer-Einsatz. Hier klärst du deinen Treffpunkt, offene Fragen zum Briefing und die passende Ansprechperson.",
+    "orientation": "Im Modell am Rand des Eingangsfoyers am Promenadeplatz. Der temporäre dunkelblaue Desk liegt vor dem Bereich, der zum Atrium führt.",
+    "services": [
+      "Einsatz und Treffpunkt klären",
+      "Ansprechpartner finden",
+      "Kurzfristige Änderungen erfragen"
+    ],
+    "gx": 39,
+    "gy": 73,
+    "px": 33,
+    "py": 89
+  },
+  "org": {
+    "name": "Sekretariat & Organisation",
+    "room": "D-E03",
+    "zone": "Seitlicher Lobbybereich · Demo",
+    "purpose": "Das Sekretariat hilft bei fehlenden Unterlagen, organisatorischen Rückfragen und offenen Absprachen. Nenne deinen Einsatz und die Unterlage, um die es geht, damit dein Anliegen zugeordnet werden kann.",
+    "orientation": "Als Demo-Büro seitlich am Eingangsfoyer eingezeichnet, neben der Übergangszone zum Veranstaltungsbereich. Erkennbar an zwei Arbeitsplätzen hinter einer niedrigen Glastrennwand.",
+    "services": [
+      "Unterlagen und Bestätigungen klären",
+      "Zuständigkeiten zuordnen",
+      "Rückfragen zu Reisekosten weitergeben"
+    ],
+    "gx": 56,
+    "gy": 76,
+    "px": 53,
+    "py": 89
+  },
+  "meet": {
+    "room": "D-104",
+    "zone": "Galerie · frei gestaltete Demoetage",
+    "purpose": "Hier findet im Beispiel die Übergabe für Guest Relations statt. Du besprichst deine Aufgabe, Änderungen im Tagesbriefing und die Abstimmung mit dem Team.",
+    "orientation": "Im Demomodell am mittleren Treppenpodest vor dem großen Besprechungsbereich, beim runden Tisch mit vier Stühlen.",
+    "services": [
+      "Beim Team ankommen",
+      "Aufgabe und Übergabe abstimmen",
+      "Pausen besprechen"
+    ],
+    "mx": 28,
+    "my": 47
+  },
+  "team": {
+    "room": "D-107",
+    "zone": "Büroflügel · frei gestaltete Demoetage",
+    "purpose": "Die Teamkoordination unterstützt bei Überschneidungen im Einsatzplan, offenen Aufgaben und kurzfristigem Abstimmungsbedarf mit der Teamleitung.",
+    "orientation": "Im rechten Büroflügel der Demoetage. Der kleinere Raum liegt hinter der Glastrennwand neben dem großen Konferenztisch.",
+    "services": [
+      "Aufgabenverteilung abstimmen",
+      "Änderungen im Einsatzplan klären",
+      "Teamleitung erreichen"
+    ],
+    "mx": 79,
+    "my": 48
+  },
+  "pause": {
+    "room": "D-202",
+    "zone": "Cafébereich · frei gestaltete Demoetage",
+    "purpose": "Ein heller Bereich für eine kurze Pause zwischen deinen Einsätzen. Im Beispiel sind hier Wasser, ein Kaffeeangebot und Sitzplätze vorgesehen.",
+    "orientation": "Bei der langen Theke im oberen Demomodell. Die runden Tische stehen zwischen dem Cafébereich und den großen Fenstern.",
+    "services": [
+      "Getränke finden",
+      "Kurz pausieren",
+      "Pausen mit dem Team abstimmen"
+    ],
+    "mx": 58,
+    "my": 13
+  },
+  "lounge": {
+    "room": "D-205",
+    "zone": "Loungeflügel · frei gestaltete Demoetage",
+    "purpose": "Ein ruhiger Rückzugsbereich zum Durchatmen und zum Austausch mit anderen Volunteers. Die Sitzgruppen liegen abseits der Getränketheke.",
+    "orientation": "Im oberen Demomodell bei den dunkelblauen Sofas und den großen Pflanzen, am äußeren Rand des Loungeflügels.",
+    "services": [
+      "In Ruhe pausieren",
+      "Andere Volunteers treffen",
+      "Nach einem Einsatz durchatmen"
+    ],
+    "mx": 23,
+    "my": 18
+  },
+  "helpb": {
+    "name": "Sekretariat · Venue B",
+    "room": "D-B02",
+    "zone": "Kurzer Gebäudeflügel · Bürobereich",
+    "purpose": "Die organisatorische Anlaufstelle im zweiten Demogebäude. Hier werden Rückfragen zu Unterlagen und Zuständigkeiten gesammelt und der passenden Person zugeordnet.",
+    "orientation": "Im kurzen Gebäudeflügel neben dem Treppenhaus, im Büro mit den beiden Arbeitsplätzen.",
+    "services": [
+      "Unterlagen klären",
+      "Zuständigkeiten finden",
+      "Rückfragen zu Belegen besprechen"
+    ],
+    "mx": 76,
+    "my": 81
+  },
+  "deskb": {
+    "room": "D-B01",
+    "zone": "Empfang · langer Gebäudeflügel",
+    "purpose": "Die erste Anlaufstelle für Volunteers in Venue B. Hier bekommst du eine Einordnung deines Einsatzes und erfährst, wer bei deinem Anliegen hilft.",
+    "orientation": "Im offenen Empfangsbereich im unteren Modell, am Tresen gegenüber der kleinen Wartezone mit den Sesseln.",
+    "services": [
+      "Einsatzfragen stellen",
+      "Ansprechpartner finden",
+      "Übergabepunkt erfragen"
+    ],
+    "mx": 29,
+    "my": 80
+  },
+  "meetb": {
+    "room": "D-B103",
+    "zone": "Besprechungsbereich · langer Flügel",
+    "purpose": "Treffpunkt für die Teamübergabe in Venue B. Hier werden die Aufgaben des nächsten Einsatzes besprochen und offene Fragen gesammelt.",
+    "orientation": "Im mittleren Etagenmodell am großen Besprechungstisch. Der Raum liegt im langen Flügel neben der verglasten Mitte.",
+    "services": [
+      "Teamübergabe durchführen",
+      "Aufgaben besprechen",
+      "Pausen abstimmen"
+    ],
+    "mx": 29,
+    "my": 48
+  },
+  "material": {
+    "room": "D-B106",
+    "zone": "Lagerraum · kurzer Gebäudeflügel",
+    "purpose": "Anlaufstelle für Arbeitsmaterial und vorbereitete Unterlagen. Kläre hier, welche Ausstattung für deinen Einsatz vorgesehen ist.",
+    "orientation": "Im mittleren Modell im kurzen Flügel. Erkennbar an den hohen Regalen, Materialboxen und dem breiten Arbeitstisch.",
+    "services": [
+      "Arbeitsmaterial erfragen",
+      "Unterlagen finden",
+      "Fehlende Ausstattung melden"
+    ],
+    "mx": 77,
+    "my": 49
+  },
+  "pauseb": {
+    "room": "D-B201",
+    "zone": "Teeküche · kurzer Gebäudeflügel",
+    "purpose": "Ein Bereich für Getränke und eine kurze Pause. An der Teeküche und den angrenzenden Tischen kannst du dich mit deinem Team abstimmen.",
+    "orientation": "Im oberen Modell an der offenen Teeküche mit Holztresen und hohen Hockern, direkt neben dem Treppenhaus.",
+    "services": [
+      "Getränke finden",
+      "Kurz pausieren",
+      "Mit dem Team abstimmen"
+    ],
+    "mx": 28,
+    "my": 12
+  },
+  "quietb": {
+    "room": "D-B204",
+    "zone": "Fensterseite · langer Gebäudeflügel",
+    "purpose": "Ein zurückgezogener Bereich zum Erholen zwischen Einsätzen. Die kleine Sitzgruppe ist vom Coffee Corner getrennt.",
+    "orientation": "Im oberen Modell am Ende des langen Flügels, bei den Fenstern und den beiden Sofas hinter der Glastrennwand.",
+    "services": [
+      "In Ruhe erholen",
+      "Sitzgelegenheiten finden",
+      "Abstand vom Trubel nehmen"
+    ],
+    "mx": 78,
+    "my": 16
+  }
+};
+  for(const b of Object.values(buildings)) for(const p of b.pois) Object.assign(p,poiDetails[p.id]);
+  buildings.hof.pois.push(...[
+  {
+    "id": "entrance",
+    "name": "Eingang & Lobby",
+    "floor": "EG",
+    "room": "Promenadeplatz",
+    "zone": "Eingangsbereich · Planreferenz 2025",
+    "category": "Orientierungspunkt",
+    "purpose": "Der Eingangsbereich am Promenadeplatz erschließt die Lobby und das Veranstaltungsensemble. Die 3D-Skizze vereinfacht das Foyer, die Treppen und den Übergang zum Atrium.",
+    "orientation": "Im vorderen Teil des Modells, unterhalb des Festsaals und der anschließenden Veranstaltungsräume. Für die genaue aktuelle Eingangssituation gilt die Beschilderung vor Ort.",
+    "services": [
+      "Eingangsbereich im Modell einordnen",
+      "Lobby und Veranstaltungsensemble unterscheiden"
+    ],
+    "contact": "anna",
+    "public": true,
+    "gx": 22,
+    "gy": 77,
+    "px": 15,
+    "py": 89
+  },
+  {
+    "id": "atrium",
+    "name": "Atrium",
+    "floor": "EG",
+    "room": "Atrium",
+    "zone": "Zwischen Cocktail Lounge und Kamin Lounge",
+    "category": "Orientierungspunkt",
+    "purpose": "Der große Bereich vor falk’s Bar ist im Hotelplan als Atrium bezeichnet. Es ist Teil des Festsaal-Ensembles und verbindet die angrenzenden Räume räumlich miteinander.",
+    "orientation": "Im Plan rechts von der Cocktail Lounge und direkt vor falk’s Bar. Im Modell ist es als heller, offener Raum mit Säulen im mittleren rechten Bereich zu erkennen.",
+    "services": [
+      "Den Bereich vor der Bar wiedererkennen",
+      "Die angrenzenden Veranstaltungsräume einordnen"
+    ],
+    "contact": "anna",
+    "public": true,
+    "gx": 71,
+    "gy": 47,
+    "px": 69,
+    "py": 55
+  },
+  {
+    "id": "falks",
+    "name": "falk’s Bar",
+    "floor": "EG",
+    "room": "Spiegelsaal",
+    "zone": "Hinter dem Atrium · Festsaal-Ensemble",
+    "category": "Orientierungspunkt",
+    "purpose": "Die Bar befindet sich im historischen Spiegelsaal. Der öffentliche Hotelgrundriss zeigt sie direkt am Atrium; sie ist ein gut wiedererkennbarer Bezugspunkt im Veranstaltungsensemble.",
+    "orientation": "Im hinteren rechten Teil des Modells, hinter dem Atrium. Erkennbar an dem länglichen Raum mit verzierten Wänden und der beleuchteten Bar.",
+    "services": [
+      "Den Spiegelsaal als Bezugspunkt erkennen",
+      "Das vorgelagerte Atrium einordnen"
+    ],
+    "contact": "anna",
+    "public": true,
+    "gx": 72,
+    "gy": 19,
+    "px": 69,
+    "py": 25
+  },
+  {
+    "id": "festsaal",
+    "name": "Festsaal",
+    "floor": "EG",
+    "room": "Festsaal EG",
+    "zone": "Linker Teil des Festsaal-Ensembles",
+    "category": "Orientierungspunkt",
+    "purpose": "Der große Saal bildet den linken Teil des Ensembles. Der Hotelplan zeigt zwischen Festsaal und Atrium die Cocktail Lounge. Im Modell sind Bühne, Raumhöhe und geschwungene Treppen vereinfacht dargestellt.",
+    "orientation": "Der größte Raum auf der linken Seite des Modells. Die Bühne und die beiden geschwungenen Treppen liegen am äußeren Saalende.",
+    "services": [
+      "Den großen Saal wiedererkennen",
+      "Festsaal und Cocktail Lounge unterscheiden"
+    ],
+    "contact": "max",
+    "public": true,
+    "gx": 25,
+    "gy": 45,
+    "px": 24,
+    "py": 53
+  },
+  {
+    "id": "cocktail",
+    "name": "Cocktail Lounge",
+    "floor": "EG",
+    "room": "Cocktail Lounge",
+    "zone": "Zwischen Festsaal und Atrium",
+    "category": "Orientierungspunkt",
+    "purpose": "Die Cocktail Lounge liegt im öffentlichen Grundriss zwischen dem großen Festsaal und dem Atrium. Sie ist ein hilfreicher Bezugspunkt, um die lange Saalfolge einzuordnen.",
+    "orientation": "Im mittleren Teil des Modells, direkt rechts neben dem Festsaal und links vom Atrium.",
+    "services": [
+      "Den Übergang zwischen Saal und Atrium erkennen",
+      "Die benachbarten Bereiche einordnen"
+    ],
+    "contact": "anna",
+    "public": true,
+    "gx": 49,
+    "gy": 49,
+    "px": 50,
+    "py": 55
+  }
+]);
+  buildings.hof.art='assets/venue-hof.webp';
+  buildings.demo.art='assets/venue-b.webp';
+  const contacts = [
+    {id:'anna',name:'Anna Weber',role:'Volunteer Support',team:'support',helps:'Hilft bei Fragen rund um deinen Einsatz.',reach:'Beispielhaft heute 08:00–18:00',poi:'desk',initials:'AW',email:'anna.weber@volunteer.example',extension:'101'},
+    {id:'max',name:'Max Keller',role:'Teamleitung · Guest Relations',team:'Guest Relations',helps:'Hilft bei Übergaben, deiner Aufgabe und Änderungen im Einsatzplan.',reach:'Beispielhaft heute 08:00–16:00',poi:'meet',initials:'MK',email:'max.keller@volunteer.example',extension:'102'},
+    {id:'julia',name:'Julia Schneider',role:'Reisekosten & Organisation',team:'Organisation',helps:'Hilft im Sekretariat bei Unterlagen, Belegen und organisatorischen Fragen.',reach:'Beispielhaft heute 09:00–17:00',poi:'org',initials:'JS',email:'julia.schneider@volunteer.example',extension:'103'}
+  ];
+  const faqs = [
+    {id:'start',category:'Einsatz',question:'Wo melde ich mich zum Einsatz?',answer:'Deinen Treffpunkt findest du auf Home unter deinem nächsten Einsatz. Bei Fragen hilft dir deine Teamleitung.',links:[['Mein Briefing','home','file'],['Ansprechpartner','contacts','users']]},
+    {id:'late',category:'Einsatz',question:'Was mache ich bei Verspätung?',answer:'Gib deiner Teamleitung möglichst früh Bescheid. Nenne deinen Einsatz und wann du voraussichtlich ankommst, damit das Team mit dir planen kann.',links:[['Teamleitung öffnen','lead','users']]},
+    {id:'receipts',category:'Reisekosten',question:'Welche Belege brauche ich?',answer:'Sammle die Nachweise zu deinen Ausgaben und ordne sie den einzelnen Kostenpositionen zu. Welche Ausgaben erstattet werden können, klärst du mit dem Reisekostenkontakt.',links:[['Reisekosten','expenses','file'],['Julia Schneider','julia','user']]},
+    {id:'break',category:'Einsatz',question:'Wo finde ich einen Pausenraum?',answer:'Im Venue Explorer findest du Anlaufstellen für Pause und Verpflegung. Wähle dein Gebäude und die passende Etage und öffne die Ortsinformationen.',links:[['Pause & Verpflegung','pause','pin']]},
+    {id:'arrival',category:'Ankunft',question:'Wo finde ich meine erste Anlaufstelle?',answer:'Der Volunteer Desk ist dein erster Kontakt bei offenen Fragen. Im Venue Explorer siehst du, in welchem Gebäude und auf welcher Etage sich die Anlaufstelle im Beispiel befindet.',links:[['Volunteer Desk','desk','pin']]},
+    {id:'access',category:'Zugang',question:'Mein Zugang klappt nicht. Wer hilft?',answer:'Wende dich an die Organisation oder an Volunteer Support. Halte die Information bereit, an welchem Zugang du stehst und welchen Einsatz du übernehmen möchtest.',links:[['Organisation öffnen','julia','user']]},
+    {id:'changed',category:'Einsatz',question:'Wo sehe ich kurzfristige Änderungen?',answer:'Die Karte „Wichtig für heute“ auf Home öffnet dein aktuelles Tagesbriefing. Lies die vollständige Nachricht und kläre offene Punkte mit deiner Teamleitung.',links:[['Mein Briefing','home','file']]},
+    {id:'travel',category:'Reisekosten',question:'Kann ich Reisekosten schon vorbereiten?',answer:'Ja. Erfasse deine Reise und die einzelnen Ausgaben, ordne Belege zu und prüfe anschließend die Gesamtsumme. Ein Entwurf lässt sich später weiterbearbeiten.',links:[['Entwurf öffnen','expenses','file']]},
+    {id:'building',category:'Ankunft',question:'Wie wechsle ich zwischen den Gebäuden?',answer:'Wähle im Venue Explorer oben das Gebäude. Die Suche findet Anlaufstellen auch in anderen Demogebäuden und öffnet die passende Etage.',links:[['Venue Explorer','venue','map']]},
+    {id:'secretariat',category:'Ankunft',question:'Wo finde ich das Sekretariat?',answer:'Die Demo-Anlaufstelle trägt die Kennung D-E03 und liegt seitlich am modellierten Eingangsfoyer. Julia Schneider hilft dort bei Unterlagen und organisatorischen Rückfragen. Die D-Raumkennung ist ein Beispiel und keine Hotel-Raumnummer.',links:[['Sekretariat · D-E03','org','pin'],['Julia Schneider','julia','user']]},
+    {id:'badge',category:'Zugang',question:'Bei meinen Unterlagen ist etwas unklar.',answer:'Der Organisationskontakt hilft dir bei Rückfragen zu deinen Unterlagen. Beschreibe kurz, welche Information fehlt, damit dein Anliegen zugeordnet werden kann.',links:[['Julia Schneider','julia','user']]}
+  ];
+  const defaultFeedback = () => ({mode:'feedback',category:'Orientierung & Infos',text:'',privacy:'anon',rating:0,comment:'',thanksTo:'anna',thanks:'',sent:false});
+  const initial = () => ({mode:'volunteer',team:'Guest Relations',briefings:[{id:'b1',title:'Briefing aktualisiert',text:'Dein Beispiel-Einsatz beginnt um 08:30 Uhr am Treffpunkt A im Bayerischen Hof (1. OG). Prüfe den Treffpunkt vor deinem Einsatz. Bei Änderungen oder offenen Fragen ist Max Keller deine Teamleitung.',audience:'all',status:'published',date:'10.10.2026'}],trip:{origin:'Nürnberg',destination:'München',start:'2026-10-10',end:'2026-10-12'},expenses:[{id:'e1',title:'Bahnfahrt nach München',cents:8990,category:'Bahn',receipt:{name:'Beispielbeleg · Hinfahrt',example:true}},{id:'e2',title:'Rückfahrt',cents:3850,category:'Bahn',receipt:null}],expenseStep:'costs',submitted:false,feedback:defaultFeedback(),feedbackHistory:[],venue:{building:'hof',floor:'EG',view:'iso',poi:'desk'}});
+  const icons = {
+    home:'<path d="M3 10.5 12 3l9 7.5V21h-6v-7H9v7H3z"/>', pin:'<path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.3"/>',
+    users:'<circle cx="9" cy="7" r="3"/><path d="M2 21v-2a7 7 0 0 1 14 0v2M17 4a3 3 0 0 1 0 6M19 14a5 5 0 0 1 3 5v2"/>',user:'<circle cx="12" cy="7" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/>',
+    book:'<path d="M12 5c-3-2-7-2-10-1v16c3-1 7-1 10 1 3-2 7-2 10-1V4c-3-1-7-1-10 1Zm0 0v16"/>', menu:'<path d="M3 5h18M3 12h18M3 19h18"/>',
+    search:'<circle cx="10.5" cy="10.5" r="7"/><path d="m16 16 5 5"/>',right:'<path d="m9 4 8 8-8 8"/>',left:'<path d="m15 4-8 8 8 8"/>',down:'<path d="m5 9 7 7 7-7"/>',arrow:'<path d="M3 12h18m-7-7 7 7-7 7"/>',
+    file:'<path d="M5 2h9l5 5v15H5zM14 2v6h5M8 12h8M8 16h6"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="1"/><path d="m3 6 9 7 9-7"/>',
+    check:'<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',warn:'<circle cx="12" cy="12" r="9"/><path d="M12 7v6m0 4h.01"/>',camera:'<path d="M8 5 10 2h4l2 3h4a2 2 0 0 1 2 2v13H2V7a2 2 0 0 1 2-2z"/><circle cx="12" cy="12" r="4"/>',
+    plus:'<path d="M12 3v18M3 12h18"/>',chat:'<path d="M3 3h18v13H9l-5 5v-5H3z"/>',heart:'<path d="M20 5a5 5 0 0 0-8 1 5 5 0 0 0-8-1c-4 5 3 10 8 15 5-5 12-10 8-15Z"/>',calendar:'<rect x="3" y="5" width="18" height="17" rx="2"/><path d="M7 2v6M17 2v6M3 10h18m-14 6 3 3 5-5"/>',
+    send:'<path d="m2 10 20-8-8 20-3-9-9-3Zm9 3L22 2"/>',info:'<circle cx="12" cy="12" r="10"/><path d="M12 11v6m0-10h.01"/>',support:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="m6 5 3 4m6 6 3 4m0-14-3 4M9 15l-3 4"/>',
+    map:'<path d="m2 5 7-3 6 3 7-3v17l-7 3-6-3-7 3Zm7-3v17m6-14v17"/>',cube:'<path d="m12 2 10 5v10l-10 5-10-5V7Zm0 10v10M2 7l10 5 10-5M7 4.5l10 5"/>',train:'<rect x="5" y="2" width="14" height="17" rx="4"/><path d="M5 7h14m-14 6h14m-9 6-3 3m11-3 3 3M9 16h.01M15 16h.01M12 7v6"/>',
+    plane:'<path d="m22 2-7 20-4-9-9-4 20-7ZM11 13l6-6"/>',sign:'<path d="M12 2v20M3 5h15l3 3-3 3H3zm18 9H6l-3 3 3 3h15"/>',bars:'<path d="M5 21V12m7 9V4m7 17V8" stroke-width="3"/>',settings:'<path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="3" fill="var(--bg)"/><circle cx="16" cy="17" r="3" fill="var(--bg)"/>',close:'<path d="m5 5 14 14M19 5 5 19"/>'
+  };
+  const icon = name => `<svg class="icon" viewBox="0 0 24 24" aria-hidden="true">${icons[name]||icons.file}</svg>`;
+  const esc = value => String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  const euro = cents => (cents/100).toLocaleString('de-DE',{style:'currency',currency:'EUR'});
+  const person = id => contacts.find(c=>c.id===id)||contacts[0];
+  const place = id => Object.entries(buildings).flatMap(([building,b])=>b.pois.map(p=>({...p,building,buildingName:b.name}))).find(p=>p.id===id);
+
+  // 2. Versionierter lokaler Zustand; Dateiinhalte bleiben nur im Arbeitsspeicher.
+  let storageAvailable=true;
+  function load() {
+    const defaults=initial();
+    try {
+      const raw=localStorage.getItem(KEY);
+      if(raw) {
+        const s=JSON.parse(raw);
+        return {...defaults,...s,venue:{...defaults.venue,...s.venue},trip:{...defaults.trip,...s.trip},feedback:{...defaultFeedback(),...s.feedback}};
+      }
+      const old=JSON.parse(localStorage.getItem(LEGACY_KEY)||'null');
+      if(!old) return defaults;
+      const migrated={...defaults,...old,trip:defaults.trip,venue:{...defaults.venue,...old.venue},feedback:{...defaultFeedback(),...old.feedback},feedbackHistory:[]};
+      migrated.expenses=(old.expenses||defaults.expenses).map(e=>({...e,cents:e.cents??Math.round(Number(e.amount||0)*100),receipt:e.receipt?(typeof e.receipt==='object'?e.receipt:{name:e.receiptName||'Beispielbeleg',example:!e.receiptName}):null}));
+      migrated.briefings=(old.briefings||defaults.briefings).map(b=>({...b,audience:b.audience==='team'?'Guest Relations':b.audience}));
+      const previousDefault='Der Treffpunkt für den heutigen Einsatz bleibt Treffpunkt A im Bayerischen Hof. Bitte sei zehn Minuten vor Beginn da.';
+      migrated.briefings=migrated.briefings.map(b=>b.id==='b1'&&b.text===previousDefault?{...defaults.briefings[0]}:b);
+      if(!['anna','max','julia'].includes(migrated.feedback.thanksTo)) migrated.feedback.thanksTo='anna';
+      return migrated;
+    } catch { storageAvailable=false; return defaults; }
+  }
+  let state=load();
+  const ui={venueQuery:'',contactQuery:'',contactFilter:'all',faqQuery:'',faqCategory:'all',expenseError:'',feedbackError:'',modalTrigger:null};
+  const previews=new Map();
+  const app=document.getElementById('app');
+  let activePage='';
+  function save() {
+    try { localStorage.setItem(KEY,JSON.stringify(state)); storageAvailable=true; return true; }
+    catch { storageAvailable=false; announce('Dein Browser kann den Entwurf gerade nicht dauerhaft speichern.'); return false; }
+  }
+  function announce(message) { document.getElementById('announcements').textContent=message; }
+  function toast(message) {
+    document.querySelector('.toast')?.remove(); const el=document.createElement('div'); el.className='toast'; el.role='status'; el.textContent=message; document.body.append(el); setTimeout(()=>el.remove(),3600);
+  }
+  function page() { return location.hash.slice(1).split('/')[0]||'home'; }
+  function go(route) { closeModal(); if(location.hash==='#'+route) render(); else location.hash=route; }
+  function total() { return state.expenses.reduce((sum,e)=>sum+e.cents,0); }
+  function lead() { return state.team==='Organisation'?'julia':'max'; }
+  function visibleBriefings() { return state.briefings.filter(b=>b.status==='published'&&(b.audience==='all'||b.audience===state.team)); }
+  function openPoi(id) {
+    const p=place(id); if(!p)return;
+    state.venue={...state.venue,building:p.building,floor:p.floor,poi:p.id}; ui.venueQuery=''; save(); go('venue/'+id);
+  }
+  function selectFloor(floor) {
+    const b=buildings[state.venue.building]; state.venue.floor=floor; state.venue.poi=b.pois.find(p=>p.floor===floor).id; history.replaceState(null,'','#venue/'+state.venue.poi); save(); render();
+  }
+  function freshDraft() { state.submitted=false; ui.expenseError=''; }
+
+  // 3. Darstellung: eine vertikale App-Spalte in allen Bildschirmgrößen.
+  function portrait(id,extra='') {
+    const c=person(id),crop={anna:[556,444,124,178],max:[540,694,86,78],julia:[541,784,85,78]}[c.id];
+    return `<div class="portrait ${extra}"><svg viewBox="${crop.join(' ')}" preserveAspectRatio="xMidYMin slice" role="img" aria-label="${c.name}, Beispielporträt aus der Designreferenz"><image href="assets/people-reference.webp" width="1448" height="1086"/></svg></div>`;
+  }
+  function architecture() { return '<svg class="architecture" viewBox="555 5 245 565" preserveAspectRatio="xMidYMin meet" aria-hidden="true"><image href="assets/frauenkirche-historical.jpg" width="800" height="587"/></svg>'; }
+  function elephant() { return '<img class="elephant" src="assets/elephant-engraving.webp" alt="" aria-hidden="true">'; }
+  const navItems=[['home','home','Home'],['venue','pin','Karte'],['contacts','users','Kontakte'],['faq','book','Wissen'],['more','menu','Mehr']];
+  function layout(content) {
+    const p=page(),nav=p==='expenses'||p==='feedback'||p==='admin'?'more':p;
+    return `<header class="app-header"><div class="brand"><div class="brand-lockup"><span class="brand-mark">MSC</span><span class="brand-name">Munich<br>Security<br>Conference</span></div><span class="brand-divider"></span><span class="brand-title">VOLUNTEER HQ</span><span class="draft-tag">ENTWURF</span></div><div class="header-meta"><span>Konzeptdemo · Beispieldaten</span><button class="demo-switch" data-action="demo-settings" aria-label="Demoansicht und Team wechseln">${icon('settings')}${state.mode==='admin'?'Admin-Demo':'Demoansicht'}</button></div></header><main id="main">${content}<p class="page-footer">Unabhängiger Designentwurf · Fiktive Inhalte</p></main><nav class="nav" aria-label="Hauptnavigation">${navItems.map(([id,i,label])=>`<button data-nav="${id}" class="${nav===id?'active':''}" ${nav===id?'aria-current="page"':''}>${icon(i)}<span>${label}</span></button>`).join('')}</nav>`;
+  }
+  function render() {
+    const route=page(); const routePoi=decodeURIComponent(location.hash.split('/')[1]||'');
+    if(route==='venue'&&place(routePoi)) { const p=place(routePoi); state.venue={...state.venue,building:p.building,floor:p.floor,poi:p.id}; }
+    const pages={home,venue,contacts:contactsPage,faq:faqPage,expenses,feedback,more,admin};
+    app.innerHTML=layout((pages[route]||home)());
+    if(activePage!==route) window.scrollTo({top:0,behavior:'instant'});
+    activePage=route;
+  }
+  function head(title,subtitle,eyebrow='') { return `<div class="page-head">${eyebrow?`<span class="eyebrow">${eyebrow}</span>`:''}<h1>${title}</h1>${subtitle?`<p>${subtitle}</p>`:''}</div>`; }
+  function entry(title,subtitle,i,attributes) { return `<button class="entry" ${attributes}><span class="entry-icon">${icon(i)}</span><span class="grow"><strong>${title}</strong>${subtitle?`<span class="subtitle">${subtitle}</span>`:''}</span>${icon('right')}</button>`; }
+  function home() {
+    const bs=visibleBriefings(),b=bs[0],isOrg=state.team==='Organisation',shiftPoi=place(isOrg?'org':'meet');
+    return `<section class="page"><div class="welcome">${architecture()}<span class="eyebrow">Dein Briefing</span><h1>Guten Morgen, Moritz.</h1><p>Schön, dass du Teil des Teams bist.</p><span class="pill">Volunteer · ${esc(state.team)}</span></div><article class="card shift"><span class="eyebrow">Dein nächster Einsatz</span><div class="shift-time">${isOrg?'09:00–13:00':'08:30–12:30'}</div><h2>${esc(state.team)}</h2><div class="row shift-location">${icon('pin')}<span>${shiftPoi.buildingName} · ${shiftPoi.name}<br><span class="tiny">Demo-Raum ${shiftPoi.room} · ${shiftPoi.floor}</span></span></div><div class="button-pair shift-actions"><button class="button primary" data-poi="${shiftPoi.id}">${icon('pin')}Ort anzeigen${icon('right')}</button><button class="button" data-contact="${lead()}">${icon('users')}Teamleitung${icon('right')}</button></div></article><span class="eyebrow section-label">Wichtig für heute</span><div class="stack">${bs.length?bs.map(item=>`<button class="entry" data-briefing="${item.id}"><span class="update-dot"></span><span class="grow"><strong>${esc(item.title)}</strong><span class="subtitle">${item.id==='b1'?'Treffpunkt bitte vor Einsatz prüfen':esc(item.text.slice(0,65))+(item.text.length>65?'…':'')}</span></span>${icon('right')}</button>`).join(''):'<div class="card small muted">Für dein Team ist gerade kein Tagesbriefing veröffentlicht.</div>'}</div><span class="eyebrow section-label">Deine Anlaufstelle</span><article class="card row person-home">${portrait('anna')}<div class="grow"><h3>Anna Weber</h3><p class="muted">Volunteer Support</p></div><button class="button compact" data-contact="anna">${icon('mail')}Kontakt</button></article><div class="stack" style="margin-top:12px">${entry('Reisekosten vorbereiten','Belege sammeln und Entwurf speichern','file','data-nav="expenses"')}${entry('Feedback geben','Deine Erfahrung hilft uns weiter','chat','data-nav="feedback"')}</div></section>`;
+  }
+  function floorGraphic(building,floor,plan=false) {
+    const alt=building==='demo',n=buildings[building].floors.indexOf(floor),tint=n===1?'#eef2f6':'#f9fbfc';
+    if(plan) return `<svg viewBox="0 0 360 250" aria-hidden="true"><rect x="15" y="18" width="330" height="211" rx="3" fill="#eef3f7" stroke="#b4c6d7"/><path d="M25 28h310v189H25Z" fill="white" stroke="#b0c1d2" stroke-width="4"/><path d="M${alt?160:145} 28v70m0 40v79M25 115h${alt?85:75}m40 0h195M245 28v87m-15 0v102M25 178h65m40 0h100" stroke="#b7c7d6" stroke-width="5" fill="none"/><path d="M290 139v63m-13-58h27m-27 12h27m-27 12h27m-27 12h27m-27 12h27" stroke="#c0ced9" stroke-width="2"/><rect x="47" y="50" width="45" height="26" rx="3" fill="${tint}" stroke="#ced9e3"/><rect x="176" y="44" width="42" height="30" rx="3" fill="#e4edf4"/><rect x="50" y="145" width="39" height="17" rx="3" fill="#e4edf4"/><rect x="170" y="163" width="36" height="20" rx="3" fill="#e4edf4"/></svg>`;
+    return `<svg viewBox="0 0 360 145" aria-hidden="true"><path d="m25 84 169-63 150 56-170 64Z" fill="#b8c9d9"/><path d="m25 75 169-63 150 56-170 64Z" fill="${tint}" stroke="#b4c6d8"/><path d="M25 75v9l149 57v-9m170-64v9l-170 64" fill="#d5e0e9" stroke="#b4c6d8"/><path d="M25 75V57l169-63v18M194 12V-6L344 50v18" stroke="#b1c4d5" stroke-width="1" fill="#e4edf3"/><path d="m45 72 58-22 59 22-58 22Z" fill="#e0e9ef" stroke="#c2d0dc"/><path d="m189 26 53 20-53 20-52-20Z" fill="#e7eef3" stroke="#c2d0dc"/><path d="m225 78 54-20 43 16-54 21Z" fill="#e5edf3" stroke="#c2d0dc"/><path d="m95 50 0-15 68 26v15m-1 0 61-23V37m-30 48 0-16 55 21m-139-5 0-16 39-15M${alt?'262 43 209 63':'302 81 249 62'}" fill="none" stroke="#b4c6d5" stroke-width="3"/><path d="m110 98 27-10 28 10-26 10Zm66-23 18-7 25 10-18 7Z" fill="#94aabb"/><path d="m110 98 0-8 27-10 0 8m39-13v-6l18-7v6" fill="#bdcdda"/><path d="m281 93 28-11m-32 8 28-11m-32 8 28-11m-32 8 28-11" stroke="#9fb5c7" stroke-width="1.5"/><ellipse cx="70" cy="64" rx="4" ry="6" fill="#9caf9e"/><ellipse cx="302" cy="64" rx="4" ry="6" fill="#9caf9e"/></svg>`;
+  }
+  function mapPin(p,index,overview=false) {
+    const selected=p.id===state.venue.poi;
+    const x=state.venue.view==='plan'?p.px:(overview?p.mx:p.gx);
+    const y=state.venue.view==='plan'?p.py:(overview?p.my:p.gy);
+    return `<button class="map-pin compact-pin ${selected?'selected':''}" style="--x:${x??p.x}%;--y:${y??p.y}%;--label-shift:${(x??p.x)<20?'-15%':(x??p.x)>80?'-85%':'-50%'}" data-poi="${p.id}" aria-label="${esc(p.name)} · ${p.floor}" aria-pressed="${selected}" title="${esc(p.name)}"><span class="pin-dot">${index+1}</span>${selected?`<span class="pin-label">${esc(p.name)}</span>`:''}</button>`;
+  }
+  function groundPlan() {
+    return '<svg viewBox="0 0 600 380" class="ground-plan" role="img" aria-label="Vereinfachtes Erdgeschoss nach öffentlichem Hotelplan"><path d="M24 125H355V50H477V125H563V290H576V360H24Z" fill="#eef3f6" stroke="#94aabd" stroke-width="3"/><path d="M24 125H250V290H24Z" fill="#e5ebef" stroke="#aabcca" stroke-width="3"/><path d="M250 125H355V290H250Z" fill="#e9eef2" stroke="#aabcca" stroke-width="3"/><path d="M355 125H477V290H355Z" fill="#f8fafb" stroke="#aabcca" stroke-width="3"/><path d="M355 50H477V125H355Z" fill="#e2e9f0" stroke="#aabcca" stroke-width="3"/><path d="M477 125H563V290H477Z" fill="#edf1f4" stroke="#aabcca" stroke-width="3"/><path d="M24 290H576V360H24Z" fill="#f2ede6" stroke="#aabcca" stroke-width="3"/><path d="M45 165Q110 165 65 215Q25 255 80 266M45 170Q103 170 60 215Q30 250 80 260" fill="none" stroke="#b19e87" stroke-width="5"/><path d="M378 80H455V104H378Z" fill="#a8b9ca"/><path d="M102 360v-16h40v16" stroke="#7a8c9d" stroke-width="5" fill="none"/><g fill="#536a7f" font-family="system-ui" text-anchor="middle" font-size="15"><text x="142" y="217">Festsaal</text><text x="303" y="201">Cocktail</text><text x="303" y="220">Lounge</text><text x="416" y="218">Atrium</text><text x="416" y="76">falk’s Bar</text><text x="519" y="209">Kamin</text><text x="519" y="228">Lounge</text><text x="405" y="342">Lobby / Foyer</text></g></svg>';
+  }
+  function spatialMap() {
+    const v=state.venue,b=buildings[v.building],ground=v.building==='hof'&&v.floor==='EG',pois=b.pois.filter(p=>p.floor===v.floor);
+    if(v.view==='plan')return `<div class="spatial-map plan-detail">${ground?groundPlan():floorGraphic(v.building,v.floor,true)}${pois.map((p,i)=>mapPin(p,i)).join('')}</div>`;
+    return `<div class="spatial-map ${ground?'ground-detail':'overview-detail'}"><img class="venue-art" src="${ground?'assets/venue-hof-ground.webp':b.art}" alt="${ground?'Schematische 3D-Interpretation des Erdgeschosses mit Festsaal, Atrium und falk’s Bar':'Freie räumliche Demo mit drei Etagen'}">${pois.map((p,i)=>mapPin(p,i,!ground)).join('')}</div>`;
+  }
+  function poiDetail(p,b) {
+    const label=p.public?'Bereich':'Demo-Raum',note=p.public?'Hotelbereich nach öffentlichem Plan · 3D vereinfacht.':'D- ist eine frei erfundene Raumkennung für diese Demo.';
+    return `<article class="card poi-detail" aria-live="polite"><span class="eyebrow">${esc(p.category)} · ${p.floor}</span><h2>${esc(p.name)}</h2><div class="room-label">${icon('pin')}<strong>${label}: ${esc(p.room)}</strong><span>· ${esc(p.zone)}</span></div><p>${esc(p.purpose)}</p><div class="location-description"><span class="field-label">Wo ungefähr?</span><p>${esc(p.orientation)}</p></div><div class="poi-services"><span class="field-label">${p.public?'Zur Orientierung':'Hier bekommst du Hilfe'}</span><ul>${p.services.map(service=>`<li>${esc(service)}</li>`).join('')}</ul></div><dl class="poi-facts"><div><dt>Gebäude</dt><dd>${esc(b.name)}</dd></div><div><dt>${p.public?'Grundlage':'Besetzung'}</dt><dd>${p.public?'Öffentlicher Hotelplan 2025':p.hours+' Uhr · Beispiel'}</dd></div></dl><div class="row poi-person">${portrait(p.contact,'mini-portrait')}<span><strong>${esc(person(p.contact).name)}</strong><br><span class="small muted">${esc(person(p.contact).role)}</span></span></div><button class="button primary full" data-contact="${p.contact}">${icon('chat')}Kontakt öffnen</button><p class="room-demo-note">${note}</p></article>`;
+  }
+  function venue() {
+    const v=state.venue,b=buildings[v.building]||buildings.hof,pois=b.pois.filter(p=>p.floor===v.floor),p=b.pois.find(p=>p.id===v.poi)||pois[0];
+    return `<section class="page">${head('Venue Explorer','')}<label class="field"><span class="field-label">Gebäude</span><select data-change="building" aria-label="Gebäude wählen">${Object.entries(buildings).map(([id,b])=>`<option value="${id}" ${v.building===id?'selected':''}>${b.name}</option>`).join('')}</select></label><div class="search">${icon('search')}<input id="venue-search" data-input="venue-search" type="search" aria-label="Anlaufstelle oder Raum in allen Gebäuden suchen" value="${esc(ui.venueQuery)}" placeholder="Anlaufstelle oder Raum suchen" autocomplete="off"></div><div id="venue-results" class="search-results" aria-live="polite">${venueResults()}</div><div class="segments" aria-label="Kartenansicht"><button data-action="map-view" data-view="iso" class="${v.view==='iso'?'active':''}" aria-pressed="${v.view==='iso'}">${icon('cube')}Räumlich</button><button data-action="map-view" data-view="plan" class="${v.view==='plan'?'active':''}" aria-pressed="${v.view==='plan'}">${icon('map')}Etagenplan</button></div><div class="floor-tabs" aria-label="Etage wählen">${b.floors.map(f=>`<button data-floor="${f}" class="${f===v.floor?'active':''}" aria-pressed="${f===v.floor}">${f}${v.building==='hof'&&f!=='EG'?'<small>Demo</small>':''}</button>`).join('')}</div><div class="venue-map">${spatialMap()}</div><p class="map-caption">${v.building==='hof'&&v.floor==='EG'?'Nach öffentlichem Hotelplan 2025 · 3D vereinfacht':'Freie Demoetagen · Keine realen Raumzuordnungen'}</p><label class="field poi-picker"><span class="field-label">Anlaufstelle auswählen</span><select data-change="poi" aria-label="Anlaufstelle auswählen">${pois.map((poi,i)=>`<option value="${poi.id}" ${poi.id===p.id?'selected':''}>${i+1}. ${esc(poi.name)}</option>`).join('')}</select></label>${poiDetail(p,b)}<button class="text-button" data-action="map-sources">Planquellen und Demo-Hinweise ${icon('right')}</button></section>`;
+  }
+  function venueResults() {
+    if(!ui.venueQuery.trim())return '';
+    const q=ui.venueQuery.trim().toLocaleLowerCase('de');
+    const found=Object.entries(buildings).flatMap(([building,b])=>b.pois.map(p=>({...p,building,nameOfBuilding:b.name}))).filter(p=>[p.name,p.category,p.room,p.zone,p.orientation,p.purpose,p.nameOfBuilding].join(' ').toLocaleLowerCase('de').includes(q));
+    return found.length?found.map(p=>entry(esc(p.name),`${esc(p.nameOfBuilding)} · ${p.floor} · ${p.public?'Bereich':'Raum'} ${p.room}`,'pin',`data-poi="${p.id}"`)).join(''):'<div class="empty">Keine Anlaufstelle gefunden. Suche nach „Sekretariat“, „falk’s Bar“ oder einer Demo-Raumkennung wie „D-E03“.</div>';
+  }
+  function contactsPage() { return `<section class="page">${head('Wer hilft dir weiter?','Die richtige Person für dein Anliegen.')}<div class="search">${icon('search')}<input type="search" data-input="contact-search" aria-label="Name, Rolle oder Anliegen suchen" value="${esc(ui.contactQuery)}" placeholder="Name oder Thema suchen"></div><div class="segments" aria-label="Kontakte filtern">${[['all','Alle'],['team','Mein Team'],['org','Organisation']].map(([id,label])=>`<button data-contact-filter="${id}" class="${ui.contactFilter===id?'active':''}" aria-pressed="${ui.contactFilter===id}">${label}</button>`).join('')}</div><div id="contact-results" aria-live="polite">${contactList()}</div><div class="info">${icon('info')}<span>Unsicher? Volunteer Support hilft dir weiter.</span></div></section>`; }
+  function contactList() {
+    const q=ui.contactQuery.toLocaleLowerCase('de'),found=contacts.filter(c=>[c.name,c.role,c.helps].join(' ').toLocaleLowerCase('de').includes(q)).filter(c=>ui.contactFilter==='all'||(ui.contactFilter==='team'?(c.team===state.team||c.id==='anna'):c.team==='Organisation'));
+    if(!found.length)return `<div class="empty" style="margin-top:14px">Keine passenden Kontakte gefunden.<br><button class="text-button" data-contact="anna">Volunteer Support öffnen ${icon('arrow')}</button></div>`;
+    const anna=found.find(c=>c.id==='anna'),others=found.filter(c=>c.id!=='anna');
+    return `${anna?`<h2 class="section-title">Deine erste Anlaufstelle</h2><article class="card contact-feature">${portrait('anna')}<div class="grow"><h3>Anna Weber</h3><p class="person-role">Volunteer Support</p><p class="person-purpose">Hilft bei Fragen rund um deinen Einsatz.</p><span class="location-label">⌖ Demo-Desk D-E01 · Lobby</span><div class="button-pair"><button class="button primary" data-contact="anna">${icon('mail')}Kontakt</button><button class="button" data-poi="desk">${icon('pin')}Ort zeigen</button></div></div></article>`:''}${others.length?`<h2 class="section-title">${anna?'Weitere Ansprechpartner':'Passende Ansprechpartner'}</h2><div class="stack">${others.map(c=>`<button class="entry contact-entry" data-contact="${c.id}">${portrait(c.id)}<span class="grow"><strong>${c.name}</strong><span class="subtitle">${c.role}</span></span>${icon('right')}</button>`).join('')}</div>`:''}`;
+  }
+  function faqPage() { return `<section class="page">${head('Was möchtest du wissen?','Antworten für deinen Volunteer-Einsatz.','Field Guide')}<div class="search">${icon('search')}<input type="search" data-input="faq-search" aria-label="FAQ durchsuchen" placeholder="Frage oder Stichwort eingeben" value="${esc(ui.faqQuery)}"></div><div class="chips" aria-label="FAQ-Kategorien">${[['Ankunft','plane'],['Einsatz','users'],['Zugang','calendar'],['Reisekosten','file']].map(([c,i])=>`<button class="chip ${ui.faqCategory===c?'active':''}" data-faq-category="${c}" aria-pressed="${ui.faqCategory===c}">${icon(i)}${c}</button>`).join('')}</div><h2 class="section-title">${ui.faqQuery||ui.faqCategory!=='all'?'Passende Fragen':'Häufige Fragen'}</h2><div id="faq-results" class="stack" aria-live="polite">${faqList()}</div><article class="card support-card"><div class="row">${icon('chat')}<strong>Deine Frage ist noch offen?</strong></div><button class="button primary full" data-contact="anna">Volunteer Support kontaktieren ${icon('arrow')}</button></article></section>`; }
+  function faqList() {
+    const q=ui.faqQuery.trim().toLocaleLowerCase('de'),found=faqs.filter(f=>(ui.faqCategory==='all'||f.category===ui.faqCategory)&&[f.question,f.answer].join(' ').toLocaleLowerCase('de').includes(q));
+    return found.length?found.map((f,i)=>`<details class="card faq-item" ${i===0?'open':''}><summary>${esc(f.question)}${icon('down')}</summary><div class="faq-body"><p>${esc(f.answer)}</p><div class="faq-actions">${f.links.map(([label,route,i])=>`<button class="text-button" data-faq-link="${route}">${icon(i)}${label}${icon('arrow')}</button>`).join('')}</div><div class="faq-meta"><span>Beispielantwort</span><span>Stand: 10. Okt. 2026</span></div></div></details>`).join(''):'<div class="empty">Keine passende Antwort gefunden.<br>Probiere einen anderen Suchbegriff oder frage Volunteer Support.<br><button class="text-button" data-action="clear-faq">Filter zurücksetzen</button></div>';
+  }
+  function expenses() {
+    const step=state.expenseStep,steps=[['travel','Reise'],['costs','Kosten'],['receipts','Belege'],['review','Prüfen']],n=steps.findIndex(s=>s[0]===step);
+    return `<section class="page"><button class="back" data-nav="more">${icon('left')}Mehr</button>${head('Reisekosten','Deine Erstattung, Schritt für Schritt.')}<div class="steps" aria-label="Reisekosten-Schritte">${steps.map(([id,label],i)=>`<button class="step ${i===n?'active':i<n?'done':''}" data-expense-step="${id}" ${i===n?'aria-current="step"':''}><span class="step-number">${i<n?'✓':i+1}</span>${label}</button>`).join('')}</div>${ui.expenseError?`<div class="error" role="alert">${esc(ui.expenseError)}</div>`:''}${step==='travel'?travelStep():step==='receipts'?receiptStep():step==='review'?reviewStep():costStep()}<div class="save-status">${icon(storageAvailable?'check':'warn')}${storageAvailable?(state.submitted?'Status gespeichert · auf diesem Gerät':'Entwurf gespeichert · auf diesem Gerät'):'Dauerhaftes Speichern nicht verfügbar'}</div></section>`;
+  }
+  function travelStep() { return `<form id="trip-form" class="stack"><article class="card"><span class="eyebrow">Deine Beispielreise</span><h2 style="margin-bottom:15px">Ankommen in München</h2><div class="stack"><label class="field"><span class="field-label">Abreiseort</span><input name="origin" required maxlength="80" value="${esc(state.trip.origin)}" autocomplete="off"></label><label class="field"><span class="field-label">Reiseziel</span><input name="destination" required maxlength="80" value="${esc(state.trip.destination)}" autocomplete="off"></label><label class="field"><span class="field-label">Anreise</span><input type="date" name="start" required value="${esc(state.trip.start)}"></label><label class="field"><span class="field-label">Rückreise</span><input type="date" name="end" required value="${esc(state.trip.end)}"></label></div></article><button class="button primary full" type="submit">Weiter zu Kosten ${icon('arrow')}</button></form>`; }
+  function receiptStatus(e) { return `<span class="expense-status ${e.receipt?'':'missing'}">${icon(e.receipt?'check':'warn')}${e.receipt?'Beleg vorhanden':'Beleg fehlt'}</span>`; }
+  function costStep() { return `<article class="card expense-summary"><div class="row between"><span class="eyebrow">Bisher erfasst</span><span class="badge">${state.submitted?'Eingereicht · Demo':'Entwurf'}</span></div><div class="expense-total">${euro(total())}</div><p class="muted tiny">Beispielbeträge · ${state.submitted?'Lokal als eingereicht markiert':'Noch nicht eingereicht'}</p></article><h2 class="section-title">Deine Kosten</h2><div class="stack">${state.expenses.length?state.expenses.map(e=>`<button class="entry" data-expense="${e.id}"><span class="entry-icon tinted">${icon(e.category==='Bahn'?'train':'file')}</span><span class="grow"><strong>${esc(e.title)}</strong>${receiptStatus(e)}</span><span class="expense-amount">${euro(e.cents)}</span>${icon('right')}</button>`).join(''):'<div class="empty">Noch keine Kosten erfasst. Füge deine erste Ausgabe hinzu.</div>'}<button class="button full" data-action="add-expense">${icon('plus')}Kosten hinzufügen</button><button class="upload" data-expense-step="receipts">${icon('camera')}Beleg fotografieren oder hochladen</button><button class="button primary full" data-expense-step="receipts">Weiter zu Belege ${icon('arrow')}</button></div>`; }
+  function receiptStep() {
+    const missing=state.expenses.filter(e=>!e.receipt).length;
+    return `<h2 style="margin-bottom:7px">Deine Belege</h2><p class="muted small" style="margin-bottom:13px">Ordne jeder Ausgabe einen Beleg zu. Dateien bleiben in diesem Browser.</p>${missing?`<div class="notice" style="margin-bottom:12px">${missing===1?'Für eine Position fehlt noch der Beleg.':`Für ${missing} Positionen fehlen noch Belege.`}</div>`:''}<div class="stack">${state.expenses.map(e=>`<article class="card receipt-card"><div class="row between"><strong class="grow">${esc(e.title)}</strong><span class="expense-amount">${euro(e.cents)}</span></div>${receiptStatus(e)}${e.receipt?`<p class="muted tiny">${esc(e.receipt.name)}${e.receipt.size?` · ${(e.receipt.size/1024).toFixed(0)} KB`:''}</p>`:''}${e.receipt&&!e.receipt.example&&!previews.has(e.id)?'<p class="muted tiny">Zur Vorschau bitte die Datei erneut auswählen. Der Dateiname bleibt gespeichert.</p>':''}${previews.has(e.id)&&e.receipt?.type?.startsWith('image/')?`<img class="receipt-preview" src="${previews.get(e.id)}" alt="Lokal ausgewählter Beleg für ${esc(e.title)}">`:''}<label class="upload">${icon('camera')}${e.receipt?'Beleg erneut auswählen':'Beleg fotografieren oder auswählen'}<span class="tiny muted">JPG, PNG, WebP oder PDF · bis 8 MB</span><input class="file-input" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" data-receipt="${e.id}" aria-label="Beleg für ${esc(e.title)} auswählen"></label></article>`).join('')}${!state.expenses.length?'<div class="empty">Lege zunächst eine Kostenposition an.</div>':''}<div class="button-pair"><button class="button" data-expense-step="costs">${icon('left')}Kosten</button><button class="button primary" data-expense-step="review">Prüfen ${icon('arrow')}</button></div></div>`;
+  }
+  function reviewStep() {
+    if(state.submitted)return `<article class="card success">${icon('check')}<h2>Eingereicht · Demo</h2><p>Deine Reisekosten über ${euro(total())} wurden auf diesem Gerät als eingereicht markiert.</p><button class="button full" data-expense-step="costs">Kostenübersicht öffnen</button><p class="tiny">Es wurde kein Antrag übermittelt. Keine Auszahlung.</p></article>`;
+    return `<h2 style="margin-bottom:12px">Noch einmal prüfen</h2><article class="card"><span class="eyebrow">${esc(state.trip.origin)} → ${esc(state.trip.destination)}</span><p class="muted small" style="margin-bottom:8px">Beispielreise · ${esc(state.trip.start)} bis ${esc(state.trip.end)}</p>${state.expenses.map(e=>`<div class="review-row"><span>${esc(e.title)}${receiptStatus(e)}</span><strong>${euro(e.cents)}</strong></div>`).join('')}<div class="review-row review-total"><span>Gesamt</span><strong>${euro(total())}</strong></div></article><p class="muted tiny" style="margin:12px 0">„Demo einreichen“ speichert nur einen lokalen Status. Es werden keine Daten an die MSC übermittelt.</p><div class="button-pair"><button class="button" data-expense-step="receipts">${icon('left')}Belege</button><button class="button primary" data-action="submit-expenses">Demo einreichen ${icon('arrow')}</button></div>`;
+  }
+  function feedback() {
+    const f=state.feedback;
+    return `<section class="page"><button class="back" data-nav="more">${icon('left')}Mehr</button><div class="page-head feedback-head">${elephant()}<h1>Deine Stimme zählt.</h1><p>Hilf uns, die Volunteer Experience zu verbessern.</p></div><div class="segments" aria-label="Beitragsart">${[['feedback','chat','Feedback'],['checkin','calendar','Check-in'],['thanks','heart','Danke']].map(([id,i,label])=>`<button data-feedback-mode="${id}" class="${f.mode===id?'active':''}" aria-pressed="${f.mode===id}">${icon(i)}${label}</button>`).join('')}</div>${f.sent?feedbackConfirmation():feedbackForm()}<div class="help-line">${icon('support')}<span>Du brauchst jetzt Hilfe?</span><button class="text-button" data-nav="contacts">Ansprechpartner öffnen ${icon('right')}</button></div>${entry('Ihr habt gesagt. Wir haben geändert.','Verbesserungen aus eurem Feedback','bars','data-action="improvements"')}</section>`;
+  }
+  function feedbackForm() {
+    const f=state.feedback,categories=['Orientierung & Infos','Einsatz & Team','Verpflegung & Pausen','Reisekosten','Sonstiges'];
+    return `<form id="feedback-form" class="form-stack" novalidate>${ui.feedbackError?`<div class="error" role="alert">${esc(ui.feedbackError)}</div>`:''}${f.mode==='feedback'?`<label class="field"><span class="field-label">Worum geht es?</span><select data-feedback="category">${categories.map(c=>`<option ${c===f.category?'selected':''}>${c}</option>`).join('')}</select></label><label class="field"><span class="field-label">Was können wir verbessern?</span><textarea data-feedback="text" maxlength="500" required placeholder="Ein klareres Schild am Treppenaufgang würde helfen, den Volunteer Desk schneller zu finden.">${esc(f.text)}</textarea><span id="feedback-counter" class="counter">${f.text.length}/500</span></label><fieldset style="border:0;padding:0;margin:0;min-width:0"><legend class="field-label" style="padding:0;margin-bottom:7px">Privatsphäre</legend><div class="stack"><label class="radio-option"><input type="radio" name="privacy" value="anon" data-feedback="privacy" ${f.privacy==='anon'?'checked':''}><span><strong>Anonym senden</strong><small>Ohne Namen, ohne persönliche Rückmeldung.</small></span></label><label class="radio-option"><input type="radio" name="privacy" value="reply" data-feedback="privacy" ${f.privacy==='reply'?'checked':''}><span><strong>Mit Rückmeldung</strong><small>Mit deinem Demoprofil Moritz · ${esc(state.team)}.</small></span></label></div></fieldset>`:f.mode==='checkin'?`<div class="field"><span class="field-label">Wie geht es dir mit deinem Einsatz?</span><div class="rating" aria-label="Bewertung von 1 bis 5">${[1,2,3,4,5].map(n=>`<button type="button" data-rating="${n}" class="${f.rating===n?'active':''}" aria-label="${n} von 5" aria-pressed="${f.rating===n}"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 9h.1M16 9h.1m-8 7q4 ${4-n*1.5} 8 0"/></svg>${n} / 5</button>`).join('')}</div><span class="tiny muted">1 = sehr schwierig · 5 = sehr gut</span></div><label class="field"><span class="field-label">Was möchtest du ergänzen? (Optional)</span><textarea data-feedback="comment" maxlength="500" placeholder="Was würde dir heute helfen?">${esc(f.comment)}</textarea></label>`:`<label class="field"><span class="field-label">Wem möchtest du Danke sagen?</span><select data-feedback="thanksTo">${contacts.map(c=>`<option value="${c.id}" ${f.thanksTo===c.id?'selected':''}>${c.name}</option>`).join('')}</select></label><label class="field"><span class="field-label">Deine Nachricht</span><textarea data-feedback="thanks" required maxlength="500" placeholder="Danke, dass du …">${esc(f.thanks)}</textarea></label>`}<button class="button primary full" type="submit">${icon(f.mode==='thanks'?'heart':'send')}${f.mode==='feedback'?'Feedback senden':f.mode==='checkin'?'Check-in speichern':'Danke senden'}</button></form>`;
+  }
+  function feedbackConfirmation() { const f=state.feedback;return `<article class="card success" style="margin-top:18px">${icon('check')}<h2>${f.mode==='thanks'?'Dein Danke ist festgehalten.':f.mode==='checkin'?'Danke für deinen Check-in.':'Danke für dein Feedback.'}</h2><p>In dieser Demo nur lokal gespeichert.</p><button class="button full" data-action="new-feedback">Weiteren Beitrag schreiben</button></article>`; }
+  function more() { return `<section class="page">${head('Alles Weitere','Für deinen Einsatz und danach.')}<div class="stack">${entry('Reisekosten','Reise, Kosten und Belege','file','data-nav="expenses"')}${entry('Feedback','Feedback, Check-in und Danke','chat','data-nav="feedback"')}${entry('Admin-Demo','Tagesbriefings erstellen und bearbeiten','settings','data-nav="admin"')}</div><div class="card soft" style="margin-top:19px"><h3>Über diese Konzeptdemo</h3><p class="small muted" style="margin:8px 0">Alle Personen und Abläufe sind fiktiv. Diese Demo ist keine offizielle MSC-Anwendung.</p><p class="small muted">Deine Änderungen bleiben auf diesem Gerät. Ein geteilter Link synchronisiert keine Daten.</p><button class="text-button" data-action="demo-settings">Demoansicht und Team wechseln ${icon('arrow')}</button></div><button class="text-button" style="color:#913d36;margin-top:10px" data-action="reset">Demo zurücksetzen</button></section>`; }
+  function admin() { return `<section class="page"><button class="back" data-nav="more">${icon('left')}Mehr</button>${head('Tagesbriefings','Veröffentlichungen erscheinen direkt auf Home.','Admin-Demo')}<div class="info" style="margin:0 0 14px">${icon('info')}<span>Präsentationsfunktion · Demoteam: ${esc(state.team)}<br>Änderungen bleiben auf diesem Gerät.</span></div><button class="button primary full" data-action="new-briefing">${icon('plus')}Briefing erstellen</button><h2 class="section-title">Deine Briefings</h2><div class="stack">${state.briefings.map(b=>`<article class="card admin-item"><div class="row between"><h3 class="grow">${esc(b.title)}</h3><span class="badge">${b.status==='published'?'Veröffentlicht':'Entwurf'}</span></div><p>${esc(b.text)}</p><div class="row between"><span class="tiny muted">${b.audience==='all'?'Alle Teams':esc(b.audience)}</span><button class="text-button" data-edit-briefing="${b.id}">Bearbeiten ${icon('right')}</button></div></article>`).join('')}</div></section>`; }
+
+  // 4. Aktionen und Dialoge.
+  function showModal(title,body) {
+    closeModal(); ui.modalTrigger=document.activeElement;
+    const layer=document.createElement('div');layer.className='modal-layer';
+    layer.innerHTML=`<section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal-head"><h2 id="modal-title">${title}</h2><button class="icon-button" data-action="close-modal" aria-label="Dialog schließen">${icon('close')}</button></div>${body}</section>`;
+    document.body.append(layer); app.inert=true; document.body.style.overflow='hidden'; layer.querySelector('button').focus();
+    layer.addEventListener('click',e=>{if(e.target===layer)closeModal();});
+  }
+  function closeModal() { const layer=document.querySelector('.modal-layer');if(!layer)return;layer.remove();app.inert=false;document.body.style.overflow='';if(ui.modalTrigger?.isConnected)ui.modalTrigger.focus(); }
+  function showContact(id) {
+    const c=person(id),p=place(c.poi);
+    showModal('Ansprechpartner',`<div class="row">${portrait(c.id,'profile-portrait')}<div class="grow"><h2>${c.name}</h2><p class="muted small" style="margin-top:6px">${c.role}</p></div></div><p class="profile-copy">${c.helps}</p><div class="card stack"><div><span class="eyebrow">Erreichbarkeit</span><p class="small">${c.reach}</p></div><div><span class="eyebrow">Demo-Anlaufstelle</span><p class="small"><strong>${p.name} · ${p.room}</strong><br>${p.buildingName} · ${p.floor}</p></div><div><span class="eyebrow">Grobe Lage im Modell</span><p class="small muted">${esc(p.orientation)}</p></div></div><div class="stack" style="margin-top:13px"><button class="button primary full" data-contact-details="${c.id}">${icon('mail')}Kontaktdaten anzeigen</button><button class="button full" data-poi="${c.poi}">${icon('pin')}Ort anzeigen</button></div>`);
+  }
+  function contactDetails(id) { const c=person(id);showModal('Kontakt · '+c.name,`<div class="card contact-data"><span class="eyebrow">Fiktive Kontaktinformationen</span><h3>${c.role}</h3><p style="margin-top:12px">${c.email}</p><p class="muted small" style="margin-top:8px">Interne Demo-Durchwahl: ${c.extension}</p></div><p class="muted small" style="margin:13px 0">Diese Kontaktdaten sind Beispiele. Es wird keine Nachricht versendet.</p><button class="button primary full" data-action="close-modal">Verstanden</button>`); }
+  function expenseDialog(id) {
+    const e=state.expenses.find(e=>e.id===id),categories=['Bahn','ÖPNV','Unterkunft','Sonstiges'];
+    showModal(e?'Kosten bearbeiten':'Kosten hinzufügen',`<form id="expense-form" data-id="${e?.id||''}" class="form-stack"><div id="expense-form-error" role="alert"></div><label class="field"><span class="field-label">Bezeichnung</span><input name="title" required maxlength="100" value="${esc(e?.title||'')}" placeholder="z. B. Rückfahrt mit der Bahn"></label><label class="field"><span class="field-label">Betrag in EUR</span><input name="amount" required inputmode="decimal" value="${e?(e.cents/100).toFixed(2).replace('.',','):''}" placeholder="0,00"></label><label class="field"><span class="field-label">Kostenart</span><select name="category">${categories.map(c=>`<option ${e?.category===c?'selected':''}>${c}</option>`).join('')}</select></label><button class="button primary full" type="submit">${e?'Änderungen speichern':'Kosten hinzufügen'}</button>${e?`<button class="button danger full" type="button" data-delete-expense="${e.id}">Position löschen</button>`:''}</form>`);
+  }
+  function briefingDialog(id) {
+    const b=state.briefings.find(b=>b.id===id);
+    showModal(b?'Briefing bearbeiten':'Briefing erstellen',`<form id="briefing-form" data-id="${b?.id||''}" class="form-stack"><label class="field"><span class="field-label">Titel</span><input name="title" required maxlength="100" value="${esc(b?.title||'')}" placeholder="z. B. Neuer Treffpunkt für das Team"></label><label class="field"><span class="field-label">Nachricht</span><textarea name="text" required maxlength="2000" placeholder="Was muss dein Team wissen?">${esc(b?.text||'')}</textarea></label><label class="field"><span class="field-label">Zielgruppe</span><select name="audience">${[['all','Alle Teams'],['Guest Relations','Team Guest Relations'],['Organisation','Team Organisation']].map(([value,label])=>`<option value="${value}" ${b?.audience===value?'selected':''}>${label}</option>`).join('')}</select></label><label class="field"><span class="field-label">Status</span><select name="status"><option value="draft" ${b?.status!=='published'?'selected':''}>Entwurf</option><option value="published" ${b?.status==='published'?'selected':''}>Veröffentlicht</option></select></label><button class="button primary full" type="submit">Briefing speichern</button></form>`);
+  }
+  function demoSettings() { showModal('Demoansicht',`<form id="demo-form" class="form-stack"><label class="field"><span class="field-label">Ansicht</span><select name="mode"><option value="volunteer" ${state.mode==='volunteer'?'selected':''}>Volunteer</option><option value="admin" ${state.mode==='admin'?'selected':''}>Admin-Demo</option></select></label><label class="field"><span class="field-label">Fiktives Demoteam</span><select name="team"><option ${state.team==='Guest Relations'?'selected':''}>Guest Relations</option><option ${state.team==='Organisation'?'selected':''}>Organisation</option></select></label><p class="small muted">Der Umschalter ist eine Präsentationsfunktion. Teambriefings werden nur beim passenden Demoteam angezeigt.</p><button class="button primary full" type="submit">Ansicht übernehmen</button></form>`); }
+  function showBriefing(id) { const b=visibleBriefings().find(b=>b.id===id);if(!b)return;showModal(esc(b.title),`<span class="eyebrow">Tagesbriefing · ${b.audience==='all'?'Alle Teams':esc(b.audience)}</span><p class="profile-copy" style="white-space:pre-line">${esc(b.text)}</p><p class="muted tiny" style="margin-bottom:15px">Stand: ${esc(b.date)} · Fiktives Beispiel</p><button class="button primary full" data-contact="${lead()}">${icon('users')}Rückfrage an die Teamleitung</button>`); }
+  function submitExpenses() {
+    ui.expenseError='';
+    if(!state.trip.origin.trim()||!state.trip.destination.trim()||!state.trip.start||!state.trip.end||state.trip.end<state.trip.start) { state.expenseStep='travel';ui.expenseError='Bitte vervollständige die Reise und prüfe die Reisedaten.'; }
+    else if(!state.expenses.length||state.expenses.some(e=>!e.title.trim()||e.cents<=0)) { state.expenseStep='costs';ui.expenseError='Bitte erfasse mindestens eine vollständige Kostenposition.'; }
+    else if(state.expenses.some(e=>!e.receipt)) { state.expenseStep='receipts';ui.expenseError='Bitte ergänze die fehlenden Belege, bevor du die Demo einreichst.'; }
+    else { state.submitted=true;state.expenseStep='review';save();toast('Deine Reisekosten wurden lokal als eingereicht markiert.'); }
+    render();
+  }
+  function sendFeedback() {
+    const f=state.feedback;ui.feedbackError='';
+    if(f.mode==='feedback'&&f.text.trim().length<10)ui.feedbackError='Beschreibe dein Anliegen bitte mit mindestens 10 Zeichen.';
+    if(f.mode==='checkin'&&!f.rating)ui.feedbackError='Wähle eine Bewertung von 1 bis 5.';
+    if(f.mode==='thanks'&&f.thanks.trim().length<3)ui.feedbackError='Schreibe bitte eine kurze Danke-Nachricht.';
+    if(!ui.feedbackError) {
+      f.sent=true;
+      const content=f.mode==='feedback'?{category:f.category,text:f.text,privacy:f.privacy}:f.mode==='checkin'?{rating:f.rating,comment:f.comment}:{thanksTo:f.thanksTo,thanks:f.thanks};
+      const anonymous=f.mode==='feedback'&&f.privacy==='anon';
+      state.feedbackHistory.push({id:'f'+Date.now(),mode:f.mode,...content,name:anonymous?null:'Moritz',team:anonymous?null:state.team});save();
+    }
+    render();
+  }
+  function resetDemo() { showModal('Demo zurücksetzen?',`<p class="muted small" style="margin-bottom:16px">Deine lokal angelegten Briefings, Kosten und Beiträge werden durch die ursprünglichen Beispieldaten ersetzt.</p><div class="stack"><button class="button danger full" data-action="confirm-reset">Zurücksetzen</button><button class="button full" data-action="close-modal">Abbrechen</button></div>`); }
+  document.addEventListener('click',event=>{
+    const button=event.target.closest('button');if(!button)return;
+    if(button.dataset.nav) { if(button.dataset.nav==='admin'){state.mode='admin';save();}go(button.dataset.nav);return; }
+    if(button.dataset.poi) { openPoi(button.dataset.poi);return; }
+    if(button.dataset.contact) { showContact(button.dataset.contact);return; }
+    if(button.dataset.contactDetails) { contactDetails(button.dataset.contactDetails);return; }
+    if(button.dataset.floor) { selectFloor(button.dataset.floor);return; }
+    if(button.dataset.briefing) { showBriefing(button.dataset.briefing);return; }
+    if(button.dataset.expense) { expenseDialog(button.dataset.expense);return; }
+    if(button.dataset.expenseStep) { state.expenseStep=button.dataset.expenseStep;ui.expenseError='';save();render();return; }
+    if(button.dataset.deleteExpense) { const id=button.dataset.deleteExpense;state.expenses=state.expenses.filter(e=>e.id!==id);if(previews.has(id))URL.revokeObjectURL(previews.get(id));previews.delete(id);freshDraft();closeModal();save();render();toast('Kostenposition gelöscht.');return; }
+    if(button.dataset.contactFilter) { ui.contactFilter=button.dataset.contactFilter;document.querySelectorAll('[data-contact-filter]').forEach(el=>{el.classList.toggle('active',el.dataset.contactFilter===ui.contactFilter);el.setAttribute('aria-pressed',el.dataset.contactFilter===ui.contactFilter);});document.getElementById('contact-results').innerHTML=contactList();return; }
+    if(button.dataset.faqCategory) { ui.faqCategory=ui.faqCategory===button.dataset.faqCategory?'all':button.dataset.faqCategory;render();return; }
+    if(button.dataset.faqLink) { const r=button.dataset.faqLink;if(r==='lead')showContact(lead());else if(contacts.some(c=>c.id===r))showContact(r);else if(place(r))openPoi(r);else go(r);return; }
+    if(button.dataset.feedbackMode) { state.feedback.mode=button.dataset.feedbackMode;state.feedback.sent=false;ui.feedbackError='';save();render();return; }
+    if(button.dataset.rating) { state.feedback.rating=Number(button.dataset.rating);save();document.querySelectorAll('[data-rating]').forEach(el=>{el.classList.toggle('active',Number(el.dataset.rating)===state.feedback.rating);el.setAttribute('aria-pressed',Number(el.dataset.rating)===state.feedback.rating);});return; }
+    if(button.dataset.editBriefing) { briefingDialog(button.dataset.editBriefing);return; }
+    switch(button.dataset.action) {
+      case 'close-modal': closeModal();break;
+      case 'demo-settings':demoSettings();break;
+      case 'map-view': state.venue.view=button.dataset.view;save();render();break;
+      case 'map-sources':showModal('Pläne und Bildquellen',`<div class="stack"><p class="small">Das Erdgeschoss orientiert sich an den öffentlichen Hotelplänen von 2025. Die 3D-Darstellung ist vereinfacht; aktuelle Zugangssituationen werden nicht behauptet. Obergeschosse, Venue B, Volunteer-Zuordnungen und alle D-Raumkennungen sind frei erfundene Beispiele.</p><p class="small"><a href="https://www.bayerischerhof.de/media/Hotel_Bayerischer_Hof/Downloads/Veranstaltungen/HBH_Konferenzbroschuere_DE_2025.pdf" target="_blank" rel="noopener noreferrer">Offizielle Konferenzbroschüre des Bayerischen Hofs</a></p><p class="small"><a href="https://www.bayerischerhof.de/media/Hotel_Bayerischer_Hof/Eine_Welt_fuer_sich/Aktuelles/HBH_Orientierungsplan_Umbau2025__V2.pdf" target="_blank" rel="noopener noreferrer">Öffentlicher Orientierungsplan 2025 (Umbauphase)</a></p><p class="small">Porträts: unveränderte Ausschnitte deiner Design-Screenshots. Frauenkirche: historischer, auf Wikimedia Commons als gemeinfrei ausgewiesener Aufriss. Etagenmodelle und Elefant: generierte Bildassets.</p><p class="small"><a href="https://commons.wikimedia.org/wiki/File:Frauenkirche_M%C3%BCnchen_Aufrisse_vor_1900.jpg" target="_blank" rel="noopener noreferrer">Bildquelle Frauenkirche</a></p></div>`);break;
+      case 'clear-faq':ui.faqQuery='';ui.faqCategory='all';render();break;
+      case 'add-expense':expenseDialog();break;
+      case 'submit-expenses':submitExpenses();break;
+      case 'new-feedback':state.feedback.sent=false;state.feedback.text='';state.feedback.comment='';state.feedback.thanks='';state.feedback.rating=0;save();render();break;
+      case 'new-briefing':briefingDialog();break;
+      case 'improvements':showModal('Ihr habt gesagt. Wir haben geändert.',`<span class="eyebrow">Fiktive Verbesserungsbeispiele</span><div class="stack"><article class="card"><h3>Die Anlaufstelle leichter finden</h3><p class="small muted" style="margin-top:6px">„Am Treppenaufgang fehlt ein Hinweis.“ – Im Beispiel wurde dort ein gut sichtbares Schild zum Volunteer Desk ergänzt.</p></article><article class="card"><h3>Änderungen an einem Ort</h3><p class="small muted" style="margin-top:6px">„Treffpunkt-Änderungen gehen unter.“ – Tageshinweise stehen jetzt gesammelt im persönlichen Briefing.</p></article><article class="card"><h3>Pausen besser abstimmen</h3><p class="small muted" style="margin-top:6px">„Ich weiß nicht, wann ich Pause machen kann.“ – Im Beispiel klärt das Team die Pausen bei der Übergabe.</p></article></div>`);break;
+      case 'reset':resetDemo();break;
+      case 'confirm-reset': for(const url of previews.values())URL.revokeObjectURL(url);previews.clear();state=initial();Object.assign(ui,{venueQuery:'',contactQuery:'',contactFilter:'all',faqQuery:'',faqCategory:'all',expenseError:'',feedbackError:''});save();closeModal();go('home');toast('Die Beispieldaten sind wiederhergestellt.');break;
+    }
+  });
+  document.addEventListener('input',event=>{
+    const el=event.target;
+    if(el.dataset.input==='venue-search') { ui.venueQuery=el.value;document.getElementById('venue-results').innerHTML=venueResults(); }
+    if(el.dataset.input==='contact-search') { ui.contactQuery=el.value;document.getElementById('contact-results').innerHTML=contactList(); }
+    if(el.dataset.input==='faq-search') { ui.faqQuery=el.value;document.getElementById('faq-results').innerHTML=faqList(); }
+    if(el.dataset.feedback) { state.feedback[el.dataset.feedback]=el.value;state.feedback.sent=false;save();const counter=document.getElementById('feedback-counter');if(counter)counter.textContent=state.feedback.text.length+'/500'; }
+  });
+  document.addEventListener('change',event=>{
+    const el=event.target;
+    if(el.dataset.change==='poi') { openPoi(el.value); }
+    if(el.dataset.change==='building') { const b=buildings[el.value];state.venue={...state.venue,building:el.value,floor:'EG',poi:b.pois[0].id};ui.venueQuery='';history.replaceState(null,'','#venue/'+state.venue.poi);save();render(); }
+    if(el.dataset.feedback) { state.feedback[el.dataset.feedback]=el.value;save(); }
+    if(el.dataset.receipt) {
+      const file=el.files?.[0];if(!file)return;
+      if(!['image/jpeg','image/png','image/webp','application/pdf'].includes(file.type)) { toast('Bitte wähle JPG, PNG, WebP oder PDF.');el.value='';return; }
+      if(file.size>8*1024*1024||file.size===0) { toast(file.size===0?'Die gewählte Datei ist leer.':'Der Beleg darf höchstens 8 MB groß sein.');el.value='';return; }
+      const e=state.expenses.find(e=>e.id===el.dataset.receipt);if(!e)return;
+      if(previews.has(e.id))URL.revokeObjectURL(previews.get(e.id));
+      previews.set(e.id,URL.createObjectURL(file));e.receipt={name:file.name,type:file.type,size:file.size,example:false};freshDraft();save();render();toast('Beleg zugeordnet. Es wurde keine Datei hochgeladen.');
+    }
+  });
+  document.addEventListener('submit',event=>{
+    const form=event.target;event.preventDefault();
+    if(form.id==='trip-form') { const data=new FormData(form);if(data.get('end')<data.get('start')){ui.expenseError='Die Rückreise darf nicht vor der Anreise liegen.';render();return;}state.trip=Object.fromEntries(data);freshDraft();state.expenseStep='costs';save();render(); }
+    if(form.id==='expense-form') {
+      const data=new FormData(form),title=String(data.get('title')).trim(),amount=String(data.get('amount')).trim().replace(',','.'),cents=Math.round(Number(amount)*100);
+      if(!title||!/^\d+(\.\d{1,2})?$/.test(amount)||!Number.isSafeInteger(cents)||cents<=0||cents>10000000) { const error=document.getElementById('expense-form-error');error.className='error';error.textContent='Bitte gib eine Bezeichnung und einen gültigen Betrag über 0 EUR ein (maximal zwei Nachkommastellen).';return; }
+      const existing=state.expenses.find(e=>e.id===form.dataset.id);if(existing)Object.assign(existing,{title,cents,category:data.get('category')});else state.expenses.push({id:'e'+Date.now(),title,cents,category:data.get('category'),receipt:null});freshDraft();state.expenseStep='costs';save();closeModal();render();
+    }
+    if(form.id==='feedback-form')sendFeedback();
+    if(form.id==='briefing-form') { const data=new FormData(form),title=String(data.get('title')).trim(),text=String(data.get('text')).trim();if(!title||!text){toast('Bitte ergänze Titel und Nachricht.');return;}const b={id:form.dataset.id||'b'+Date.now(),title,text,audience:data.get('audience'),status:data.get('status'),date:new Date().toLocaleDateString('de-DE')},index=state.briefings.findIndex(item=>item.id===b.id);if(index>=0)state.briefings.splice(index,1);state.briefings.unshift(b);save();closeModal();render();toast(b.status==='published'?'Briefing veröffentlicht.':'Briefing als Entwurf gespeichert.'); }
+    if(form.id==='demo-form') { const data=new FormData(form);state.mode=data.get('mode');state.team=data.get('team');save();go(state.mode==='admin'?'admin':'home'); }
+  });
+  document.addEventListener('keydown',event=>{
+    const modal=document.querySelector('.modal');if(!modal)return;
+    if(event.key==='Escape') { event.preventDefault();closeModal(); }
+    if(event.key==='Tab') { const focusable=Array.from(modal.querySelectorAll('button,input,select,textarea,a[href]')).filter(el=>!el.disabled),first=focusable[0],last=focusable[focusable.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();} }
+  });
+  window.addEventListener('hashchange',()=>{closeModal();render();});
+  window.addEventListener('pagehide',()=>{for(const url of previews.values())URL.revokeObjectURL(url);previews.clear();});
+  if(!location.hash)history.replaceState(null,'','#home');
+  render();
+  save();
+})();
+</script>
+</body>
+</html>
